@@ -1,5 +1,4 @@
-//
-//  Untitled.swift
+
 //  RickAndMortyApp
 //
 //  Created by Humberto Alejandro Zepeda González on 18/09/25.
