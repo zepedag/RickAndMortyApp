@@ -14,7 +14,7 @@ struct RickAndMortyAppApp: App {
         WindowGroup {
             NavigationStack(path: $router.navStack) {
                 ContentView()
-            } .environmentObject(router)
+            }.environmentObject(router)
 
             
         }
