@@ -8,5 +8,16 @@
 import Foundation
 
 protocol ApíService {
-    func getDataFromGetRequest(from url: String)
+    func getDataFromGetRequest <Response: Codable>(from url: String) async throws -> Response
+    
+}
+
+class DefaultApiService: ApiService {
+    
+    func getDataFromGetRequest<Response: Codable>(from url: String) async throws -> Response {
+        guard let url = URL(string: url) else {
+            
+        }
+        
+    }
 }
