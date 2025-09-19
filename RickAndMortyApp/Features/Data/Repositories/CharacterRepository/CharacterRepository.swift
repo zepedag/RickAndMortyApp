@@ -36,7 +36,7 @@ class DefaultCharacterRepository: CharacterRepository {
     
         do {
             // Construct endpoint URL
-            let endpoint = RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.pagination + (pageNumber ?? "1")
+            let endpoint = RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.pagination)\(pageNumber ?? "1")"
             // Fetch data from API
             let response: CharacterListResponse = try await apiService.getDataFromGetRequest(from: endpoint)
             // Cache the response
@@ -76,9 +76,9 @@ extension DefaultCharacterRepository {
     /// Constructs the API endpoint for searching with pagination.
     private func getEndpointForPagination(by name: String, and pageNumber: String?) -> String {
         if let pageNumber = pageNumber {
-            return RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.name + name + RemoteURL.searchPagination + pageNumber
+            return RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.name)\(name)" + "\(RemoteURL.searchPagination)\(pageNumber)"
         } else {
-            return RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.name + name
+            return RemoteURL.baseUrl + RemoteURL.characterUrl + "\(RemoteURL.name)\(name)"
         }
     }
 }
