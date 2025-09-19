@@ -11,12 +11,14 @@ struct CharacterDetailView: View {
     @Environment(\.presentationMode) var presentationMode
 
     var character: CharacterBusinessModel?
+    var localStorageUseCase: LocalStorageUseCase = LocalStorageUseCase()
     
     var body: some View {
         ScrollView {
             imageView
             detailView
         }
+        .coordinateSpace(.named("scroll"))
         .toolbar(.visible, for: .navigationBar)
         .background(Color("Background"))
         .ignoresSafeArea()
@@ -135,16 +137,49 @@ struct CharacterDetailView: View {
                             .foregroundColor(.secondary)
                     }
                     
-                    if let listOfEpisodes = character?.listOfEpisodes {
-                        Text("Episodes:")
-                            .font(.footnote).bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.primary.opacity(0.7))
-                        
-                        Text(listOfEpisodes)
-                            .font(.footnote)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.primary.opacity(0.7))
+                    // Episodes section - Compact version
+                    if let character = character, !character.episodes.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            // Episodes header
+                            HStack {
+                                Text("Episodes")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Text("\(character.episodes.count) episodes")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(.ultraThinMaterial)
+                                    .backgroundStyle(cornerRadius: 8)
+                            }
+                            
+                            // Compact episodes list
+                            LazyVStack(spacing: 6) {
+                                ForEach(character.episodes.prefix(5), id: \.self) { episodeUrl in
+                                    CompactEpisodeRow(
+                                        episodeUrl: episodeUrl,
+                                        characterId: character.id,
+                                        localStorageUseCase: localStorageUseCase
+                                    )
+                                }
+                                
+                                // Show "more episodes" if there are more than 5
+                                if character.episodes.count > 5 {
+                                    Text("+ \(character.episodes.count - 5) more episodes")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                        .padding(.top, 4)
+                                }
+                            }
+                        }
+                        .padding(16)
+                        .background(.ultraThinMaterial)
+                        .backgroundStyle(cornerRadius: 16)
                     }
                 }
                 .padding(20)
@@ -163,11 +198,80 @@ struct CharacterDetailView: View {
                 )
                 .offset(y: scrollY > 0 ? -scrollY * 1.8 : 0)
                 .frame(maxHeight: .infinity, alignment: .bottom)
-                .offset(y: 200)
+                .offset(y: 300)
                 .padding(20)
             )
         }
         .frame(height: 500)
+    }
+}
+
+// MARK: - Compact Episode Row Component
+
+struct CompactEpisodeRow: View {
+    let episodeUrl: String
+    let characterId: Int
+    let localStorageUseCase: LocalStorageUseCase
+    @State private var isWatched: Bool = false
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            // Episode icon
+            Image(systemName: "tv")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.blue)
+                .frame(width: 16, height: 16)
+            
+            // Episode info
+            Text(episodeTitle)
+                .font(.caption)
+                .fontWeight(.medium)
+                .foregroundColor(.primary)
+            
+            Spacer()
+            
+            // Watch status toggle
+            Button(action: {
+                isWatched = localStorageUseCase.toggleEpisodeStatus(
+                    episodeId: extractEpisodeId(from: episodeUrl),
+                    characterId: characterId
+                )
+            }) {
+                Image(systemName: isWatched ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(isWatched ? .green : .gray)
+                    .animation(.easeInOut(duration: 0.2), value: isWatched)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial)
+        .backgroundStyle(cornerRadius: 8)
+        .opacity(isWatched ? 0.7 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: isWatched)
+        .onAppear {
+            isWatched = localStorageUseCase.isEpisodeWatched(
+                episodeId: extractEpisodeId(from: episodeUrl),
+                characterId: characterId
+            )
+        }
+    }
+    
+    private var episodeTitle: String {
+        if let url = URL(string: episodeUrl),
+           let episodeNumber = url.lastPathComponent.components(separatedBy: "/").last {
+            return "Episode \(episodeNumber)"
+        }
+        return "Unknown Episode"
+    }
+    
+    private func extractEpisodeId(from url: String) -> String {
+        if let url = URL(string: url),
+           let episodeId = url.lastPathComponent.components(separatedBy: "/").last {
+            return episodeId
+        }
+        return url
     }
 }
 
