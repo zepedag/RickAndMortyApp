@@ -36,6 +36,18 @@ struct NavigationBarView: View {
                 .opacity(contentHasScrolled ? 0.7 : 1)
             
             HStack(spacing: 16) {
+                // Locations Button
+                Button {
+                    router.pushView(.locations)
+                } label: {
+                    Image(systemName: "map")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(.secondary)
+                        .background(.ultraThinMaterial)
+                        .backgroundStyle(cornerRadius: 16, opacity: 0.4)
+                }
+                
                 // Favorites Button
                 Button {
                     router.pushView(.favorites)
