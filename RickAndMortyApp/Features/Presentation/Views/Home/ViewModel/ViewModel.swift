@@ -41,6 +41,15 @@ import Observation
          localStorageUseCase: LocalStorageUseCase = LocalStorageUseCase()) {
         self.useCase = useCase
         self.localStorageUseCase = localStorageUseCase
+        
+        // Load local characters immediately on initialization
+        loadLocalCharacters()
+    }
+    
+    /// Loads characters from local storage synchronously
+    private func loadLocalCharacters() {
+        let localCharacters = localStorageUseCase.getAllCharacters()
+        characterList = localCharacters
     }
     
     /// Loads the character list from the network or cache.
@@ -52,7 +61,7 @@ import Observation
         isLoading = true
         
         do {
-            // Fetch the character list for the current page.
+            // Fetch fresh data from the network
             let response = try await useCase.getCharacterList(pageNumber: "\(currentPage)")
             
             // Save characters to local storage

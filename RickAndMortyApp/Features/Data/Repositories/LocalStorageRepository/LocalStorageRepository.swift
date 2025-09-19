@@ -61,7 +61,7 @@ class LocalStorageRepository {
     func getAllCharacters() -> [CharacterBusinessModel] {
         let context = coreDataStack.context
         let request: NSFetchRequest<CharacterEntity> = CharacterEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        request.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
         
         do {
             let entities = try context.fetch(request)

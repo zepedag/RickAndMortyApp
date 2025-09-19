@@ -10,10 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var model = NavigationBarModel()
     @StateObject var router = Router()
+    @State var homeViewModel = HomeViewModel()
     
     var body: some View {
         NavigationStack(path: $router.navStack) {
-            HomeView(viewModel: HomeViewModel())
+            HomeView(viewModel: homeViewModel)
                 .environmentObject(model)
                 .environmentObject(router)
                 .pushPath()
