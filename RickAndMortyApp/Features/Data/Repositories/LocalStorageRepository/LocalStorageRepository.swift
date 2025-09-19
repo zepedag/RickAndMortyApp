@@ -143,20 +143,20 @@ class LocalStorageRepository {
     
     // MARK: - Episode Operations
     
-    /// Marks an episode as watched for a character
+    /// Marks an episode as watched globally (shared across all characters)
     func markEpisodeAsWatched(episodeId: String, characterId: Int) {
         let context = coreDataStack.context
         
-        // Check if already watched
+        // Check if already watched globally (ignore characterId)
         let request: NSFetchRequest<EpisodeEntity> = EpisodeEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "episodeId == %@ AND characterId == %d", episodeId, characterId)
+        request.predicate = NSPredicate(format: "episodeId == %@", episodeId)
         request.fetchLimit = 1
         
         do {
             let results = try context.fetch(request)
             
             if results.isEmpty {
-                // Add to watched episodes
+                // Add to watched episodes (characterId is stored but not used for uniqueness)
                 _ = EpisodeEntity.create(episodeId: episodeId, characterId: characterId, context: context)
                 coreDataStack.saveContext()
             }
@@ -165,12 +165,13 @@ class LocalStorageRepository {
         }
     }
     
-    /// Marks an episode as not watched for a character
+    /// Marks an episode as not watched globally (shared across all characters)
     func markEpisodeAsNotWatched(episodeId: String, characterId: Int) {
         let context = coreDataStack.context
         
+        // Remove globally (ignore characterId)
         let request: NSFetchRequest<EpisodeEntity> = EpisodeEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "episodeId == %@ AND characterId == %d", episodeId, characterId)
+        request.predicate = NSPredicate(format: "episodeId == %@", episodeId)
         request.fetchLimit = 1
         
         do {
@@ -185,11 +186,11 @@ class LocalStorageRepository {
         }
     }
     
-    /// Checks if an episode is watched for a character
+    /// Checks if an episode is watched globally (shared across all characters)
     func isEpisodeWatched(episodeId: String, characterId: Int) -> Bool {
         let context = coreDataStack.context
         let request: NSFetchRequest<EpisodeEntity> = EpisodeEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "episodeId == %@ AND characterId == %d", episodeId, characterId)
+        request.predicate = NSPredicate(format: "episodeId == %@", episodeId)
         request.fetchLimit = 1
         
         do {
@@ -201,11 +202,10 @@ class LocalStorageRepository {
         }
     }
     
-    /// Gets watched episodes for a character
+    /// Gets all watched episodes globally (shared across all characters)
     func getWatchedEpisodes(for characterId: Int) -> [String] {
         let context = coreDataStack.context
         let request: NSFetchRequest<EpisodeEntity> = EpisodeEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "characterId == %d", characterId)
         
         do {
             let results = try context.fetch(request)
@@ -213,6 +213,19 @@ class LocalStorageRepository {
         } catch {
             print("Error fetching watched episodes: \(error)")
             return []
+        }
+    }
+    
+    /// Toggles episode watching status globally (shared across all characters)
+    func toggleEpisodeStatus(episodeId: String, characterId: Int) -> Bool {
+        let isWatched = isEpisodeWatched(episodeId: episodeId, characterId: characterId)
+        
+        if isWatched {
+            markEpisodeAsNotWatched(episodeId: episodeId, characterId: characterId)
+            return false
+        } else {
+            markEpisodeAsWatched(episodeId: episodeId, characterId: characterId)
+            return true
         }
     }
     

@@ -18,9 +18,10 @@ protocol RouterDelegate {
 
 extension Router {
     enum Paths: Equatable, CaseIterable {
-        static var allCases: [Router.Paths] = [.homePage, .favorites]
+        static var allCases: [Router.Paths] = [.homePage, .favorites, .locations]
         case homePage
         case favorites
+        case locations
         case custom(view: AnyView)
     }
 
@@ -28,6 +29,7 @@ extension Router {
         static let routes: [Paths: AnyView] = [
             .homePage: AnyView(HomeView(viewModel: HomeViewModel())),
             .favorites: AnyView(FavoritesView(viewModel: FavoritesViewModel())),
+            .locations: AnyView(LocationsView()),
        ]
     }
     
@@ -37,6 +39,8 @@ extension Router {
                 return AnyView(HomeView(viewModel: HomeViewModel()))
             case .favorites:
                 return AnyView(FavoritesView(viewModel: FavoritesViewModel()))
+            case .locations:
+                return AnyView(LocationsView())
             case .custom(let view):
                 return view
         }
@@ -84,19 +88,23 @@ extension Router.Paths: Hashable {
                 return true
             case (.favorites, .favorites):
                 return true
+            case (.locations, .locations):
+                return true
             case (.custom, .custom):
                 return true
             default:
                 return false
         }
     }
-    
+
     func hash(into hasher: inout Hasher) {
         switch self {
             case .homePage:
                 hasher.combine("homePage")
             case .favorites:
                 hasher.combine("favorites")
+            case .locations:
+                hasher.combine("locations")
             case .custom(_):
                 hasher.combine("custom")
         }
