@@ -39,7 +39,7 @@ struct HomeView: View {
          }
          .alert(isPresented: $viewModel.hasError) {
              Alert(title: Text("Important message"),
-                   message: Text(viewModel.viewError?.localizedDescription ?? "Unexpected error is happen"),
+                   message: Text(viewModel.viewError?.localizedDescription ?? "Unexpected error has happened"),
                    dismissButton: .default(Text("Got it!")))
          }.sheet(isPresented: $showDetail) {
              CharacterDetailView(character: selectedCharacter)

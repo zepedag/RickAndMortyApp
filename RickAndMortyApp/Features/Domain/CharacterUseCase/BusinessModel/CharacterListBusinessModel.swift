@@ -19,6 +19,12 @@ struct CharacterListBusinessModel {
             CharacterBusinessModel(response: response)
         })
     }
+    
+    // Convenience initializer for local data
+    init(info: InfoBusinessModel, results: [CharacterBusinessModel]) {
+        self.info = info
+        self.results = results
+    }
 }
 
 // MARK: - Info
@@ -62,6 +68,22 @@ struct CharacterBusinessModel {
         url = response.url
         created = response.created
     }
+    
+    // Convenience initializer for local data
+    init(id: Int, name: String, status: StatusBusinessModel?, species: String, type: String, gender: GenderBusinessModel?, origin: LocationBusinessModel, location: LocationBusinessModel, image: String, episodes: [String], url: String, created: String) {
+        self.id = id
+        self.name = name
+        self.status = status
+        self.species = species
+        self.type = type
+        self.gender = gender
+        self.origin = origin
+        self.location = location
+        self.image = image
+        self.episodes = episodes
+        self.url = url
+        self.created = created
+    }
 }
 
 // MARK: - Location
@@ -72,6 +94,12 @@ struct LocationBusinessModel {
     init(response: LocationResponse) {
         self.name = response.name
         self.url = response.url
+    }
+    
+    // Convenience initializer for local data
+    init(name: String, url: String) {
+        self.name = name
+        self.url = url
     }
 }
 
