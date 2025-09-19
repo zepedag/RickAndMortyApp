@@ -54,7 +54,43 @@ extension SearchView {
     }
     
     var emptyView: some View {
-        Text("No results found")
-            .searchViewStyle()
+        VStack(spacing: 20) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 60))
+                .foregroundColor(.secondary)
+            
+            Text("No Results Found")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.primary)
+            
+            Text("Try adjusting your search terms or filters")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+            
+            // Suggestions
+            VStack(spacing: 8) {
+                Text("Suggestions:")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+                
+                Text("• Check your spelling")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text("• Try different keywords")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text("• Clear filters")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .searchViewStyle()
     }
 }
