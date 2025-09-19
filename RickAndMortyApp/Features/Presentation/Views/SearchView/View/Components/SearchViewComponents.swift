@@ -10,7 +10,7 @@ extension SearchView {
     var searchView: some View {
         ScrollView {
             scrollDetectionView
-            ForEach(Array(viewModel.characterList.enumerated()), id: \.offset) { index, character in
+            ForEach(Array(viewModel.filteredCharacterList.enumerated()), id: \.offset) { index, character in
                 if index != 0 {
                     Divider()
                 }
@@ -42,7 +42,7 @@ extension SearchView {
         }
         .onPreferenceChange(ScrollPreferenceKey.self) { value in
             withAnimation(.easeInOut) {
-                let estimatedContentHeight = CGFloat(viewModel.characterList.count * 50)
+                let estimatedContentHeight = CGFloat(viewModel.filteredCharacterList.count * 50)
                 let threshold = 0.4 * estimatedContentHeight
                 if value <= -threshold {
                     Task {
