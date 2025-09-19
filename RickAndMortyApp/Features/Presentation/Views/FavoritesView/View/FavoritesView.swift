@@ -10,44 +10,69 @@ import Observation
 
 struct FavoritesView: View {
     @Bindable var viewModel: FavoritesViewModel
+    @State private var authViewModel = AuthenticationViewModel()
     @State private var showCharacterDetail = false
     @State private var selectedCharacter: CharacterBusinessModel?
     @EnvironmentObject var router: Router
     
     var body: some View {
-            ZStack {
-                Color("Background").ignoresSafeArea()
-                
-                if viewModel.isLoading {
-                    loadingView
-                } else if viewModel.isEmpty {
-                    emptyView
-                } else {
-                    favoritesListView
-                }
+        ZStack {
+            Color("Background").ignoresSafeArea()
+            
+            if !authViewModel.isAuthenticated {
+                // Show authentication view
+                AuthenticationView(authViewModel: authViewModel)
+                    .navigationTitle("Secure Access")
+                    .navigationBarTitleDisplayMode(.large)
+            } else {
+                // Show favorites content
+                favoritesContent
+                    .navigationTitle("Favorites")
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Logout") {
+                                authViewModel.logout()
+                            }
+                            .foregroundColor(.red)
+                        }
+                    }
             }
-            .navigationTitle("Favorites")
-            .navigationBarTitleDisplayMode(.large)
-            .onAppear {
-                Task {
-                    await viewModel.loadFavorites()
-                }
+        }
+        .onAppear {
+            Task {
+                await viewModel.loadFavorites()
             }
-            .refreshable {
-                await viewModel.refreshFavorites()
+        }
+        .sheet(isPresented: $showCharacterDetail) {
+            if let character = selectedCharacter {
+                CharacterDetailView(character: character)
             }
-            .alert(isPresented: $viewModel.hasError) {
-                Alert(
-                    title: Text("Error"),
-                    message: Text(viewModel.viewError?.localizedDescription ?? "An unexpected error occurred"),
-                    dismissButton: .default(Text("OK"))
-                )
+        }
+    }
+    
+    // MARK: - Favorites Content
+    
+    private var favoritesContent: some View {
+        Group {
+            if viewModel.isLoading {
+                loadingView
+            } else if viewModel.isEmpty {
+                emptyView
+            } else {
+                favoritesListView
             }
-            .sheet(isPresented: $showCharacterDetail) {
-                if let character = selectedCharacter {
-                    CharacterDetailView(character: character)
-                }
-            }
+        }
+        .refreshable {
+            await viewModel.refreshFavorites()
+        }
+        .alert(isPresented: $viewModel.hasError) {
+            Alert(
+                title: Text("Error"),
+                message: Text(viewModel.viewError?.localizedDescription ?? "An unexpected error occurred"),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
     
     // MARK: - Views
