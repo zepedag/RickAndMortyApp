@@ -14,6 +14,7 @@ struct NavigationBarView: View {
     @State var showSheet = false
     @Binding var contentHasScrolled: Bool
     @EnvironmentObject var model: NavigationBarModel
+    @EnvironmentObject var router: Router
     
     var body: some View {
         ZStack {
@@ -35,6 +36,19 @@ struct NavigationBarView: View {
                 .opacity(contentHasScrolled ? 0.7 : 1)
             
             HStack(spacing: 16) {
+                // Favorites Button
+                Button {
+                    router.pushView(.favorites)
+                } label: {
+                    Image(systemName: "star")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(width: 36, height: 36)
+                        .foregroundColor(.secondary)
+                        .background(.ultraThinMaterial)
+                        .backgroundStyle(cornerRadius: 16, opacity: 0.4)
+                }
+                
+                // Search Button
                 Button {
                     showSheet.toggle()
                 } label: {

@@ -36,6 +36,9 @@ struct SectionRowView: View {
                     .accentColor(.white)
             }
             Spacer()
+            
+            // Favorite button
+            FavoriteButton(characterId: section.id)
         }
     }
 }

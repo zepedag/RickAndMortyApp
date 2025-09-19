@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23A344" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CharacterEntity" representedClassName="CharacterEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="NO" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="NO" attributeType="String"/>
+        <attribute name="status" optional="YES" attributeType="String"/>
+        <attribute name="species" optional="NO" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="gender" optional="YES" attributeType="String"/>
+        <attribute name="image" optional="NO" attributeType="String"/>
+        <attribute name="url" optional="NO" attributeType="String"/>
+        <attribute name="created" optional="NO" attributeType="String"/>
+        <attribute name="originName" optional="NO" attributeType="String"/>
+        <attribute name="originUrl" optional="NO" attributeType="String"/>
+        <attribute name="locationName" optional="NO" attributeType="String"/>
+        <attribute name="locationUrl" optional="NO" attributeType="String"/>
+        <attribute name="episodes" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromDataTransformer"/>
+        <attribute name="lastUpdated" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="FavoriteEntity" representedClassName="FavoriteEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="characterId" optional="NO" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="addedDate" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="EpisodeEntity" representedClassName="EpisodeEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="episodeId" optional="NO" attributeType="String"/>
+        <attribute name="characterId" optional="NO" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="watchedDate" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
+</model>

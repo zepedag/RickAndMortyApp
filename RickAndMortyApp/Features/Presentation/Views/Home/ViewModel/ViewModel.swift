@@ -14,6 +14,9 @@ import Observation
     /// Use case for managing character-related logic.
     private let useCase: CharacterUseCase
     
+    /// Local storage use case for CoreData operations
+    private let localStorageUseCase: LocalStorageUseCase
+    
     /// Array of characters that will be displayed.
     var characterList: [CharacterBusinessModel] = []
     
@@ -31,9 +34,13 @@ import Observation
     
     /// Initializes a new HomeViewModel.
     ///
-    /// - Parameter useCase: The use case for character-related logic. Defaults to `DefaultCharacterUseCase()`.
-    init(useCase: CharacterUseCase = DefaultCharacterUseCase()) {
+    /// - Parameters:
+    ///   - useCase: The use case for character-related logic. Defaults to `DefaultCharacterUseCase()`.
+    ///   - localStorageUseCase: The use case for local storage operations. Defaults to `LocalStorageUseCase()`.
+    init(useCase: CharacterUseCase = DefaultCharacterUseCase(), 
+         localStorageUseCase: LocalStorageUseCase = LocalStorageUseCase()) {
         self.useCase = useCase
+        self.localStorageUseCase = localStorageUseCase
     }
     
     /// Loads the character list from the network or cache.
@@ -47,6 +54,9 @@ import Observation
         do {
             // Fetch the character list for the current page.
             let response = try await useCase.getCharacterList(pageNumber: "\(currentPage)")
+            
+            // Save characters to local storage
+            localStorageUseCase.saveCharacters(response.results)
             
             // Update the UI on the main thread.
             await MainActor.run {
