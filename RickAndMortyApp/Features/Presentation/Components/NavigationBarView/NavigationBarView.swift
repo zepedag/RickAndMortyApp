@@ -36,6 +36,9 @@ struct NavigationBarView: View {
                 .opacity(contentHasScrolled ? 0.7 : 1)
             
             HStack(spacing: 16) {
+                // Network Status Indicator
+                CompactNetworkStatusIndicator()
+                
                 // Locations Button
                 Button {
                     router.pushView(.locations)

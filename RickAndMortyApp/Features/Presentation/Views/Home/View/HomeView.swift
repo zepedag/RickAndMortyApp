@@ -21,7 +21,12 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
-            scrollView
+            VStack(spacing: 0) {
+                // Network status indicator at the top
+                NetworkStatusIndicator()
+                
+                scrollView
+            }
         }
         .onChange(of: showDetail, {
             withAnimation {

@@ -41,24 +41,74 @@ extension HomeView {
     }
 
     var characterListView: some View {
-        VStack(spacing: 16) {
-            ForEach(Array(viewModel.characterList.enumerated()), id: \.offset) { index, businessModel in
-                SectionRowView(section: SectionRowModel(businessModel: businessModel))
-                    .onTapGesture {
-                        selectedCharacter = businessModel
-                        showDetail = true
+        Group {
+            if viewModel.characterList.isEmpty && !viewModel.isLoading {
+                emptyStateView
+            } else {
+                VStack(spacing: 16) {
+                    ForEach(Array(viewModel.characterList.enumerated()), id: \.offset) { index, businessModel in
+                        SectionRowView(section: SectionRowModel(businessModel: businessModel))
+                            .onTapGesture {
+                                selectedCharacter = businessModel
+                                showDetail = true
+                            }
+                        if index == viewModel.characterList.count - 1 {
+                            Divider()
+                            if viewModel.isLoading {
+                                ProgressView("Loading more characters...")
+                                    .accentColor(.white)
+                            }
+                        } else {
+                            Divider()
+                        }
                     }
-                if index == viewModel.characterList.count - 1 {
-                    Divider()
-                    if viewModel.isLoading {
-                        ProgressView("Loading more characters...")
-                            .accentColor(.white)
-                    }
-                } else {
-                    Divider()
                 }
+                .padding(20)
+                .background(.ultraThinMaterial)
+                .backgroundStyle(cornerRadius: 30)
+                .padding(.horizontal, 20)
             }
         }
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "person.3")
+                .font(.system(size: 60))
+                .foregroundColor(.secondary)
+            
+            Text("No Characters Available")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .foregroundColor(.primary)
+            
+            Text("Unable to load characters at the moment")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+            
+            Button(action: {
+                Task {
+                    await viewModel.loadCharacterList()
+                }
+            }) {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 16, weight: .medium))
+                    Text("Try Again")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(Color.blue)
+                .cornerRadius(12)
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(20)
         .background(.ultraThinMaterial)
         .backgroundStyle(cornerRadius: 30)
