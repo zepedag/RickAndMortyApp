@@ -21,7 +21,7 @@ import Observation
     // Estado y contadores para estabilidad
     private var consecutiveFailures: Int = 0
     private var consecutiveSuccesses: Int = 0
-    private let requiredConsecutiveCount = 3  // Requiere 3 confirmaciones antes de cambiar
+    private let requiredConsecutiveCount = 2  // Requiere 2 confirmaciones antes de cambiar (más rápido)
     
     var isConnected: Bool = false  // Empezar como desconectado hasta confirmar
     var connectionType: ConnectionType = .wifi  // Asumir Wi-Fi por defecto
@@ -61,8 +61,8 @@ import Observation
         }
         
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 3.0  // Timeout más corto para el chequeo inicial
-        config.timeoutIntervalForResource = 3.0
+        config.timeoutIntervalForRequest = 2.0  // Timeout más agresivo para detección rápida
+        config.timeoutIntervalForResource = 2.0
         config.waitsForConnectivity = false
         config.allowsCellularAccess = true
         let session = URLSession(configuration: config)
@@ -168,8 +168,8 @@ import Observation
     private func startConnectivityChecks() {
         connectivityTimer?.invalidate()
         
-        // Chequeos menos frecuentes pero más estables
-        connectivityTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+        // Chequeos más frecuentes para detección rápida
+        connectivityTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
             self?.performStableConnectivityCheck()
         }
     }
@@ -188,8 +188,8 @@ import Observation
         }
         
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 5.0
-        config.timeoutIntervalForResource = 5.0
+        config.timeoutIntervalForRequest = 2.0  // Timeout agresivo para detección rápida
+        config.timeoutIntervalForResource = 2.0
         config.waitsForConnectivity = false
         config.allowsCellularAccess = true
         let session = URLSession(configuration: config)
@@ -218,7 +218,7 @@ import Observation
             // Solo cambiar a conectado después de X confirmaciones consecutivas
             if consecutiveSuccesses >= requiredConsecutiveCount && !self.isConnected {
                 self.isConnected = true
-                print("✅ STABLE: CONNECTION RESTORED after \(consecutiveSuccesses) confirmations")
+                print("✅ FAST: CONNECTION RESTORED after \(consecutiveSuccesses) confirmations")
                 
                 // Asegurar que tenemos un tipo de conexión válido cuando se restaura
                 if connectionType == .unknown {
@@ -233,7 +233,7 @@ import Observation
             // Solo cambiar a desconectado después de X confirmaciones consecutivas
             if consecutiveFailures >= requiredConsecutiveCount && self.isConnected {
                 self.isConnected = false
-                print("❌ STABLE: CONNECTION LOST after \(consecutiveFailures) confirmations")
+                print("❌ FAST: CONNECTION LOST after \(consecutiveFailures) confirmations")
                 
                 // Al perder conexión, mantener el último tipo conocido (no cambiar a unknown)
                 // Esto evita que aparezca "?" cuando se pierde la conexión
