@@ -53,7 +53,8 @@ struct AuthenticationView: View {
                                 .font(.system(size: 20, weight: .medium))
                         }
 
-                        Text(authViewModel.isAuthenticating ? "Authenticating..." : "Use \(authViewModel.biometricType)")
+                        Text(authViewModel.isAuthenticating ? "Authenticating..." :
+                                "Use \(authViewModel.biometricType)")
                             .font(.headline)
                             .fontWeight(.semibold)
                     }

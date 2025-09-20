@@ -306,13 +306,7 @@ struct LocationsView: View {
             }
             .navigationTitle("Ubicaciones")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Cerrar") {
-                        router.pop()
-                    }
-                }
-            }
+
         }
         .sheet(isPresented: $showCharacterDetail) {
             if let character = selectedCharacter {
