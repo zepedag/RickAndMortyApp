@@ -24,21 +24,21 @@ struct NetworkStatusIndicator: View {
         }
         .onAppear {
             updateBannerVisibility()
-            print("📱 NetworkStatusIndicator: Appeared, isConnected: \(networkMonitor.isConnected)")
+            print("NetworkStatusIndicator: Appeared, isConnected: \(networkMonitor.isConnected)")
         }
         .onChange(of: networkMonitor.isConnected) { _, isConnected in
-            print("📱 NetworkStatusIndicator: Connection changed to: \(isConnected)")
-            print("📱 NetworkStatusIndicator: Connection type: \(networkMonitor.connectionTypeDescription)")
+            print("NetworkStatusIndicator: Connection changed to: \(isConnected)")
+            print("NetworkStatusIndicator: Connection type: \(networkMonitor.connectionTypeDescription)")
             updateBannerVisibility()
         }
         .onChange(of: networkMonitor.connectionType) { _, connectionType in
-            print("📱 NetworkStatusIndicator: Connection type changed to: \(connectionType)")
+            print("NetworkStatusIndicator: Connection type changed to: \(connectionType)")
         }
     }
     
     private func updateBannerVisibility() {
         let shouldShowBanner = !networkMonitor.isConnected
-        print("📱 NetworkStatusIndicator: Updating banner visibility to: \(shouldShowBanner)")
+        print("NetworkStatusIndicator: Updating banner visibility to: \(shouldShowBanner)")
         
         withAnimation(.easeInOut(duration: 0.3)) {
             showBanner = shouldShowBanner
