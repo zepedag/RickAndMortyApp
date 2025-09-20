@@ -94,7 +94,7 @@ struct CharacterDetailView: View {
                     }
                     
                     if let species = character?.species {
-                        Text("Specie: \(String(describing: species))".uppercased())
+                        Text("Species: \(String(describing: species))".uppercased())
                             .font(.footnote).bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.primary.opacity(0.7))
