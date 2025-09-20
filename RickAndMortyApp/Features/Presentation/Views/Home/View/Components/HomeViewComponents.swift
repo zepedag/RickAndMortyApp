@@ -14,7 +14,11 @@ extension HomeView {
             characterListView
                 .padding(.vertical, 70)
                 .padding(.bottom, 50)
-        }.coordinateSpace(.named("scroll"))
+        }
+        .coordinateSpace(.named("scroll"))
+        .refreshable {
+            await viewModel.refreshCharacterList()
+        }
     }
     
     var scrollDetectionView: some View {

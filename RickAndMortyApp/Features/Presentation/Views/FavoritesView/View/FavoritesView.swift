@@ -57,7 +57,7 @@ struct FavoritesView: View {
         Group {
             if viewModel.isLoading {
                 loadingView
-            } else if viewModel.isEmpty {
+            } else if viewModel.favoriteCharacters.isEmpty {
                 emptyView
             } else {
                 favoritesListView
@@ -116,9 +116,7 @@ struct FavoritesView: View {
                             showCharacterDetail = true
                         },
                         onRemoveFavorite: {
-                            Task {
-                                await viewModel.removeFromFavorites(characterId: character.id)
-                            }
+                            viewModel.removeFromFavorites(characterId: character.id)
                         }
                     )
                 }

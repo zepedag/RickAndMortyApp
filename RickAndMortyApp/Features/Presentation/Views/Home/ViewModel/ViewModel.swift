@@ -83,6 +83,47 @@ import Observation
             }
         }
     }
+    
+    /// Refreshes the character list by resetting pagination and loading fresh data
+    func refreshCharacterList() async {
+        // Reset pagination
+        currentPage = 1
+        
+        // Set loading flag
+        isLoading = true
+        
+        // Network connectivity is automatically monitored
+        
+        do {
+            // Fetch fresh data from the network
+            let response = try await useCase.getCharacterList(pageNumber: "\(currentPage)")
+            
+            // Save characters to local storage
+            localStorageUseCase.saveCharacters(response.results)
+            
+            // Update the UI on the main thread.
+            await MainActor.run {
+                characterList = response.results // Replace with fresh data
+                hasError = false
+                currentPage += 1 // Increment current page for pagination
+                isLoading = false
+                
+                print("✅ HomeViewModel: Successfully fetched data")
+            }
+        } catch {
+            // Handle error and update the UI on the main thread.
+            await MainActor.run {
+                isLoading = false
+                // Check if it's a network error
+                if let appError = error as? AppError, case AppError.networkUnavailable = appError {
+                    viewError = .networkUnavailable
+                } else {
+                    viewError = .unExpectedError
+                }
+                hasError = true
+            }
+        }
+    }
 }
 
 /// Extension to initialize `SectionRowModel` from `CharacterBusinessModel`.
