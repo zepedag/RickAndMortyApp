@@ -51,6 +51,9 @@ import Combine
         }
         guard !isLoading, canFetchMoreCharacters else { return }
         isLoading = true
+        
+        // Network connectivity is automatically monitored
+        
         if isFirstLoad {
             currentPage = 1
             characterList = []
@@ -112,6 +115,8 @@ extension SearchViewModel {
             currentPage += 1  // Increment page number for next fetch
             isLoading = false
             canFetchMoreCharacters = true
+            
+            print("✅ SearchViewModel: Successfully fetched data")
         }
         } catch {
             await handleError()

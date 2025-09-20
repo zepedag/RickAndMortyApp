@@ -30,6 +30,9 @@ extension SearchView {
         }
         .searchViewStyle()
         .coordinateSpace(.named("scrollview"))
+        .refreshable {
+            await viewModel.searchCharacter(by: text, isFirstLoad: true)
+        }
         .sheet(isPresented: $showCharacterDetail) {
             CharacterDetailView(character: selectedCharacter)
         }

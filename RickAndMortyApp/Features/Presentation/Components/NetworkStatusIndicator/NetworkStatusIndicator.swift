@@ -13,20 +13,35 @@ struct NetworkStatusIndicator: View {
     @State private var showBanner = false
     
     var body: some View {
-        VStack(spacing: 0) {
+        Group {
             if !networkMonitor.isConnected {
                 offlineBanner
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                    .animation(.easeInOut(duration: 0.3), value: showBanner)
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .bottom).combined(with: .opacity),
+                        removal: .move(edge: .bottom).combined(with: .opacity)
+                    ))
             }
         }
         .onAppear {
-            showBanner = !networkMonitor.isConnected
+            updateBannerVisibility()
+            print("📱 NetworkStatusIndicator: Appeared, isConnected: \(networkMonitor.isConnected)")
         }
         .onChange(of: networkMonitor.isConnected) { _, isConnected in
-            withAnimation(.easeInOut(duration: 0.3)) {
-                showBanner = !isConnected
-            }
+            print("📱 NetworkStatusIndicator: Connection changed to: \(isConnected)")
+            print("📱 NetworkStatusIndicator: Connection type: \(networkMonitor.connectionTypeDescription)")
+            updateBannerVisibility()
+        }
+        .onChange(of: networkMonitor.connectionType) { _, connectionType in
+            print("📱 NetworkStatusIndicator: Connection type changed to: \(connectionType)")
+        }
+    }
+    
+    private func updateBannerVisibility() {
+        let shouldShowBanner = !networkMonitor.isConnected
+        print("📱 NetworkStatusIndicator: Updating banner visibility to: \(shouldShowBanner)")
+        
+        withAnimation(.easeInOut(duration: 0.3)) {
+            showBanner = shouldShowBanner
         }
     }
     
@@ -36,15 +51,21 @@ struct NetworkStatusIndicator: View {
                 .font(.system(size: 14, weight: .medium))
                 .foregroundColor(.white)
             
-            Text("No Internet Connection")
-                .font(.caption)
-                .fontWeight(.medium)
-                .foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("No Internet Connection")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white)
+                
+                Text("Check your network settings")
+                    .font(.caption2)
+                    .foregroundColor(.white.opacity(0.8))
+            }
             
             Spacer()
             
-            Text("Using cached data")
-                .font(.caption2)
+            Image(systemName: "wifi.slash")
+                .font(.system(size: 16, weight: .medium))
                 .foregroundColor(.white.opacity(0.8))
         }
         .padding(.horizontal, 16)
@@ -69,18 +90,21 @@ struct CompactNetworkStatusIndicator: View {
             Image(systemName: networkMonitor.isConnected ? networkMonitor.connectionTypeIcon : "wifi.slash")
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(networkMonitor.isConnected ? .green : .red)
+                .animation(.easeInOut(duration: 0.2), value: networkMonitor.isConnected)
             
             if !networkMonitor.isConnected {
                 Text("Offline")
                     .font(.caption2)
                     .fontWeight(.medium)
                     .foregroundColor(.red)
+                    .transition(.opacity)
             }
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
         .background(.ultraThinMaterial)
         .backgroundStyle(cornerRadius: 8)
+        .animation(.easeInOut(duration: 0.2), value: networkMonitor.isConnected)
     }
 }
 

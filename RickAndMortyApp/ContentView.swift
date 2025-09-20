@@ -19,6 +19,10 @@ struct ContentView: View {
                 .environmentObject(router)
                 .pushPath()
         }
+        .onAppear {
+            // Network monitoring starts automatically
+            print("📱 ContentView: Network monitoring is automatic")
+        }
     }
 }
 
