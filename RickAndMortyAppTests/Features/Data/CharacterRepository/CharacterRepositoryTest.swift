@@ -10,17 +10,17 @@ import XCTest
 
 // MARK: - Test
 class CharacterRepositoryTest: XCTestCase {
-    
+
     // GIVEN
     var sut: CharacterRepository?
     var sutFailure: CharacterRepository?
-    
+
     override func setUp() {
         super.setUp()
         sut = DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess())
         sutFailure = DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())
     }
-    
+
     override func tearDown() {
         sut = nil
         sutFailure = nil
@@ -38,7 +38,7 @@ extension CharacterRepositoryTest {
             XCTFail("Always receive a response and not throw an error")
         }
     }
-    
+
     func testSuccessCase_SearchCharacter() async {
         do {
             let response = try await sut?.searchCharacter(by: "Rick", and: nil)
@@ -53,17 +53,18 @@ extension CharacterRepositoryTest {
 extension CharacterRepositoryTest {
     func testFailureCase_getCharacterList() async {
         do {
-            let _ = try await sutFailure?.getCharacterList(pageNumber: nil)
+            _ = try await sutFailure?.getCharacterList(pageNumber: nil)
             XCTFail("This test should throw an error")
         } catch {
             // Test passed
         }
     }
-    
+
     func testFailureCase_getCharacterListParseError() async {
-        let sutFailure: CharacterRepository = DefaultCharacterRepository(apiService: CharacterListFakeApiServiceParseErrorFailure())
+        let sutFailure: CharacterRepository =
+        DefaultCharacterRepository(apiService: CharacterListFakeApiServiceParseErrorFailure())
         do {
-            let _ = try await sutFailure.getCharacterList(pageNumber: nil)
+            _ = try await sutFailure.getCharacterList(pageNumber: nil)
             XCTFail("This test should throw an error")
         } catch {
             // Test passed
@@ -74,17 +75,13 @@ extension CharacterRepositoryTest {
             }
         }
     }
-    
+
     func testFailureCase_SearchCharacter() async {
         do {
-            let _ = try await sutFailure?.searchCharacter(by: "Rick", and: nil)
+            _ = try await sutFailure?.searchCharacter(by: "Rick", and: nil)
             XCTFail("This test should throw an error")
         } catch {
             // Test passed
         }
     }
 }
-
-
-
-

@@ -10,17 +10,19 @@ import XCTest
 
 // MARK: - Test
 class SearchViewModelTest: XCTestCase {
-    
+
     // GIVEN
     var sut: SearchViewModel?
     var sutFailure: SearchViewModel?
-    
+
     override func setUp() {
         super.setUp()
-        sut = SearchViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess())))
-        sutFailure = SearchViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())))
+        sut = SearchViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService:
+                                                                                                        CharacterListFakeApiServiceSuccess())))
+        sutFailure = SearchViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService:
+                                                                                                        CharacterListFakeApiServiceFailure())))
     }
-    
+
     override func tearDown() {
         sut = nil
         sutFailure = nil
@@ -44,5 +46,3 @@ extension SearchViewModelTest {
         XCTAssertTrue(sutFailure.characterList.isEmpty)
     }
 }
-
-

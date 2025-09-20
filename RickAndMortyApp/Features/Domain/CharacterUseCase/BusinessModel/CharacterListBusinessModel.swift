@@ -11,7 +11,7 @@ import Foundation
 struct CharacterListBusinessModel {
     let info: InfoBusinessModel
     let results: [CharacterBusinessModel]
-        
+
     init(response: CharacterListResponse) {
         info = InfoBusinessModel(next: response.info.next ?? "",
                                  prev: response.info.prev ?? "")
@@ -19,7 +19,7 @@ struct CharacterListBusinessModel {
             CharacterBusinessModel(response: response)
         })
     }
-    
+
     // Convenience initializer for local data
     init(info: InfoBusinessModel, results: [CharacterBusinessModel]) {
         self.info = info
@@ -30,7 +30,7 @@ struct CharacterListBusinessModel {
 // MARK: - Info
 struct InfoBusinessModel {
     let next, prev: String
-    
+
     init(next: String, prev: String) {
         self.next = next
         self.prev = prev
@@ -49,11 +49,11 @@ struct CharacterBusinessModel {
     let episodes: [String]
     let url: String
     let created: String
-    
+
     var listOfEpisodes: String {
         episodes.compactMap { URL(string: $0)?.lastPathComponent }.joined(separator: ", ")
     }
-    
+
     init(response: CharacterResponse) {
         id = response.id
         name = response.name
@@ -68,9 +68,22 @@ struct CharacterBusinessModel {
         url = response.url
         created = response.created
     }
-    
+
     // Convenience initializer for local data
-    init(id: Int, name: String, status: StatusBusinessModel?, species: String, type: String, gender: GenderBusinessModel?, origin: LocationBusinessModel, location: LocationBusinessModel, image: String, episodes: [String], url: String, created: String) {
+    init(
+        id: Int,
+        name: String,
+        status: StatusBusinessModel?,
+        species: String,
+        type: String,
+        gender: GenderBusinessModel?,
+        origin: LocationBusinessModel,
+        location: LocationBusinessModel,
+        image: String,
+        episodes: [String],
+        url: String,
+        created: String
+    ) {
         self.id = id
         self.name = name
         self.status = status
@@ -90,12 +103,12 @@ struct CharacterBusinessModel {
 struct LocationBusinessModel {
     let name: String
     let url: String
-    
+
     init(response: LocationResponse) {
         self.name = response.name
         self.url = response.url
     }
-    
+
     // Convenience initializer for local data
     init(name: String, url: String) {
         self.name = name
@@ -114,7 +127,3 @@ enum StatusBusinessModel: String {
     case dead = "Dead"
     case unknown = "unknown"
 }
-
-
-
-

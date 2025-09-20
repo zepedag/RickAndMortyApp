@@ -12,23 +12,23 @@ struct EpisodeProgress: View {
     let episodes: [String]
     @State private var watchedEpisodes: [String] = []
     @State private var isLoading: Bool = false
-    
+
     private let localStorageUseCase = LocalStorageUseCase()
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text("Episodes Progress")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Spacer()
-                
+
                 Text("\(watchedEpisodes.count)/\(episodes.count)")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
             ProgressView(value: progress)
                 .progressViewStyle(LinearProgressViewStyle(tint: .blue))
                 .scaleEffect(y: 0.5)
@@ -37,12 +37,12 @@ struct EpisodeProgress: View {
             loadWatchedEpisodes()
         }
     }
-    
+
     private var progress: Double {
         guard !episodes.isEmpty else { return 0.0 }
         return Double(watchedEpisodes.count) / Double(episodes.count)
     }
-    
+
     private func loadWatchedEpisodes() {
         isLoading = true
         watchedEpisodes = localStorageUseCase.getWatchedEpisodes(for: characterId)

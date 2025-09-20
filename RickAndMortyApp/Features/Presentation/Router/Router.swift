@@ -10,10 +10,10 @@ import Combine
 
 protocol RouterDelegate {
     associatedtype Route = Path
-    func pushView(_ newView : Route)
+    func pushView(_ newView: Route)
     func poptoRoot()
     func pop()
-    func popUntil(_ targetRoute : Route)
+    func popUntil(_ targetRoute: Route)
 }
 
 extension Router {
@@ -29,43 +29,43 @@ extension Router {
         static let routes: [Paths: AnyView] = [
             .homePage: AnyView(HomeView(viewModel: HomeViewModel())),
             .favorites: AnyView(FavoritesView(viewModel: FavoritesViewModel())),
-            .locations: AnyView(LocationsView()),
-       ]
+            .locations: AnyView(LocationsView())
+        ]
     }
-    
+
     static func getRoute(for path: Paths) -> AnyView {
         switch path {
-            case .homePage:
-                return AnyView(HomeView(viewModel: HomeViewModel()))
-            case .favorites:
-                return AnyView(FavoritesView(viewModel: FavoritesViewModel()))
-            case .locations:
-                return AnyView(LocationsView())
-            case .custom(let view):
-                return view
+        case .homePage:
+            return AnyView(HomeView(viewModel: HomeViewModel()))
+        case .favorites:
+            return AnyView(FavoritesView(viewModel: FavoritesViewModel()))
+        case .locations:
+            return AnyView(LocationsView())
+        case .custom(let view):
+            return view
         }
     }
 }
 
 class Router: ObservableObject, RouterDelegate {
     @Environment(\.presentationMode) var presentationMode
-    
+
     @Published var navStack: [Paths] = []
- 
+
     func pushView(_ newView: Paths) {
         navStack.append(newView)
     }
-            
+
     func poptoRoot() {
         navStack.removeAll()
     }
-    
+
     func pop() {
         if !navStack.isEmpty {
             navStack.removeLast()
         }
     }
-    
+
     func popUntil(_ targetRoute: Paths) {
         if !navStack.isEmpty {
             navStack.removeLast()
@@ -84,31 +84,29 @@ extension View {
 extension Router.Paths: Hashable {
     static func == (lhs: Router.Paths, rhs: Router.Paths) -> Bool {
         switch (lhs, rhs) {
-            case (.homePage, .homePage):
-                return true
-            case (.favorites, .favorites):
-                return true
-            case (.locations, .locations):
-                return true
-            case (.custom, .custom):
-                return true
-            default:
-                return false
+        case (.homePage, .homePage):
+            return true
+        case (.favorites, .favorites):
+            return true
+        case (.locations, .locations):
+            return true
+        case (.custom, .custom):
+            return true
+        default:
+            return false
         }
     }
 
     func hash(into hasher: inout Hasher) {
         switch self {
-            case .homePage:
-                hasher.combine("homePage")
-            case .favorites:
-                hasher.combine("favorites")
-            case .locations:
-                hasher.combine("locations")
-            case .custom(_):
-                hasher.combine("custom")
+        case .homePage:
+            hasher.combine("homePage")
+        case .favorites:
+            hasher.combine("favorites")
+        case .locations:
+            hasher.combine("locations")
+        case .custom:
+            hasher.combine("custom")
         }
     }
 }
-
-

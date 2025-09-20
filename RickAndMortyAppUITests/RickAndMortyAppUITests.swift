@@ -27,14 +27,16 @@ final class RickAndMortyAppUITests: XCTestCase {
     func testEpisodeWatchToggleFlow() throws {
         let app = XCUIApplication()
         app.launch()
-        
+
         // 1. Verify app launched successfully
-        XCTAssertTrue(app.staticTexts["Characters"].waitForExistence(timeout: 15.0), "Characters title should be visible")
+        XCTAssertTrue(app.staticTexts["Characters"].waitForExistence(timeout:
+                                                                        15.0),
+                      "Characters title should be visible")
         print("App launched successfully")
-        
+
         // 2. Wait for characters to load
         sleep(2)
-        
+
         // 3. Find the first character by looking for the first "Rick Sanchez" text
         let rickCharacterQuery = app.staticTexts.matching(NSPredicate(format: "label == 'Rick Sanchez'"))
         if rickCharacterQuery.count > 0 {
@@ -57,15 +59,15 @@ final class RickAndMortyAppUITests: XCTestCase {
                 }
             }
         }
-        
+
         // 4. Verify character detail opened by looking for the close button
         let detailExists = app.buttons["xmark"].waitForExistence(timeout: 10.0)
         XCTAssertTrue(detailExists, "Character detail should open")
         print("Character detail opened")
-        
+
         // 5. Wait a moment for content to load
         sleep(1)
-        
+
         // 6. Try to interact with episode toggle buttons (checkmark.circle.fill or circle)
         // First try to find buttons with checkmark.circle.fill (watched episodes)
         let watchedEpisodeButtons = app.buttons.matching(NSPredicate(format: "label CONTAINS 'checkmark.circle.fill'"))
@@ -92,11 +94,11 @@ final class RickAndMortyAppUITests: XCTestCase {
                 // Try to find any button that might be an episode toggle
                 let allButtons = app.buttons
                 print("Total buttons found: \(allButtons.count)")
-                for i in 0..<min(allButtons.count, 10) {
-                    let button = allButtons.element(boundBy: i)
-                    print("Button \(i): " + button.label)
+                for element in 0..<min(allButtons.count, 10) {
+                    let button = allButtons.element(boundBy: element)
+                    print("Button \(element): " + button.label)
                 }
-                
+
                 // Try to tap the 5th button (likely an episode toggle based on the UI)
                 if allButtons.count > 4 {
                     let episodeButton = allButtons.element(boundBy: 4)
@@ -109,7 +111,7 @@ final class RickAndMortyAppUITests: XCTestCase {
                 }
             }
         }
-        
+
         // 7. Close character detail
         let closeDetail = app.buttons["xmark"]
         if closeDetail.waitForExistence(timeout: 3.0) {
@@ -117,7 +119,7 @@ final class RickAndMortyAppUITests: XCTestCase {
             print("Closed character detail")
             sleep(1)
         }
-        
+
         // 8. Verify back to main screen
         XCTAssertTrue(app.staticTexts["Characters"].waitForExistence(timeout: 5.0), "Should return to main screen")
         print("Episode watch toggle flow completed successfully")

@@ -8,20 +8,20 @@
 import Foundation
 
 protocol ApiService {
-    func getDataFromGetRequest <Response: Codable>(from url: String) async throws -> Response
-    
+    func getDataFromGetRequest<Response: Codable>(from url: String) async throws -> Response
+
 }
 
 class DefaultApiService: ApiService {
-    
+
     func getDataFromGetRequest<Response: Codable>(from url: String) async throws -> Response {
         guard let url = URL(string: url) else {
             throw AppError.invalidUrl
         }
-        
+
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
-            
+
             // Check for HTTP errors
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
@@ -35,7 +35,7 @@ class DefaultApiService: ApiService {
                     throw AppError.serviceError(error: NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"]))
                 }
             }
-            
+
             return try JSONDecoder().decode(Response.self, from: data)
         } catch let error as AppError {
             throw error

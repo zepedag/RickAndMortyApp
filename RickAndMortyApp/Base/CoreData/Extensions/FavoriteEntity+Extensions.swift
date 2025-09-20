@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension FavoriteEntity {
-    
+
     /// Creates a FavoriteEntity for a character
     static func create(characterId: Int, context: NSManagedObjectContext) -> FavoriteEntity {
         let entity = FavoriteEntity(context: context)

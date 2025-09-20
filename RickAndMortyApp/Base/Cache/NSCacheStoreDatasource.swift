@@ -10,7 +10,7 @@ import Foundation
 public protocol NSCacheStoreDatasource {
     associatedtype Key: Hashable
     associatedtype Value
-    
+
     func save(_ value: Value, forKey key: Key)
     func retrieve(forKey key: Key) -> Value?
     func removeValue(forKey key: Key)
@@ -19,17 +19,17 @@ public protocol NSCacheStoreDatasource {
 
 public class DefaultNSCacheStoreDatasource <Key: Hashable, Value>: NSCacheStoreDatasource {
     private let wrapped = NSCache<WrappedKey, Entry>()
-    
+
     public func save(_ value: Value, forKey key: Key) {
         let entry = Entry(value: value)
         wrapped.setObject(entry, forKey: WrappedKey(key))
     }
-    
+
     public func retrieve(forKey key: Key) -> Value? {
         let entry = wrapped.object(forKey: WrappedKey(key))
         return entry?.value
     }
-    
+
     public func removeValue(forKey key: Key) {
         wrapped.removeObject(forKey: WrappedKey(key))
     }
@@ -63,7 +63,7 @@ private extension DefaultNSCacheStoreDatasource {
 }
 
 public extension DefaultNSCacheStoreDatasource {
-     subscript(key: Key) -> Value? {
+    subscript(key: Key) -> Value? {
         get { return retrieve(forKey: key) }
         set {
             guard let value = newValue else {
@@ -76,4 +76,3 @@ public extension DefaultNSCacheStoreDatasource {
         }
     }
 }
-

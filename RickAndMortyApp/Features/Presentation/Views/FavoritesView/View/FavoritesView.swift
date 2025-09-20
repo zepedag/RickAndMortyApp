@@ -14,11 +14,11 @@ struct FavoritesView: View {
     @State private var showCharacterDetail = false
     @State private var selectedCharacter: CharacterBusinessModel?
     @EnvironmentObject var router: Router
-    
+
     var body: some View {
         ZStack {
             Color("Background").ignoresSafeArea()
-            
+
             if !authViewModel.isAuthenticated {
                 // Show authentication view
                 AuthenticationView(authViewModel: authViewModel)
@@ -50,9 +50,9 @@ struct FavoritesView: View {
             }
         }
     }
-    
+
     // MARK: - Favorites Content
-    
+
     private var favoritesContent: some View {
         Group {
             if viewModel.isLoading {
@@ -74,9 +74,9 @@ struct FavoritesView: View {
             )
         }
     }
-    
+
     // MARK: - Views
-    
+
     private var loadingView: some View {
         VStack(spacing: 16) {
             ProgressView()
@@ -86,17 +86,17 @@ struct FavoritesView: View {
                 .foregroundColor(.secondary)
         }
     }
-    
+
     private var emptyView: some View {
         VStack(spacing: 20) {
             Image(systemName: "heart")
                 .font(.system(size: 60))
                 .foregroundColor(.secondary)
-            
+
             Text("No Favorites Yet")
                 .font(.title2)
                 .fontWeight(.semibold)
-            
+
             Text("Characters you mark as favorites will appear here")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
@@ -104,7 +104,7 @@ struct FavoritesView: View {
                 .padding(.horizontal, 40)
         }
     }
-    
+
     private var favoritesListView: some View {
         ScrollView {
             LazyVStack(spacing: 16) {
@@ -133,7 +133,7 @@ struct FavoriteCharacterRow: View {
     let character: CharacterBusinessModel
     let onTap: () -> Void
     let onRemoveFavorite: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 16) {
@@ -149,18 +149,18 @@ struct FavoriteCharacterRow: View {
                 }
                 .frame(width: 60, height: 60)
                 .clipShape(Circle())
-                
+
                 // Character Info
                 VStack(alignment: .leading, spacing: 4) {
                     Text(character.name)
                         .font(.headline)
                         .foregroundColor(.primary)
                         .lineLimit(1)
-                    
+
                     Text(character.species)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                    
+
                     HStack {
                         StatusIndicator(status: character.status)
                         Spacer()
@@ -169,9 +169,9 @@ struct FavoriteCharacterRow: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                
+
                 Spacer()
-                
+
                 // Remove from favorites button
                 Button(action: onRemoveFavorite) {
                     Image(systemName: "heart.fill")
@@ -192,19 +192,19 @@ struct FavoriteCharacterRow: View {
 
 struct StatusIndicator: View {
     let status: StatusBusinessModel?
-    
+
     var body: some View {
         HStack(spacing: 4) {
             Circle()
                 .fill(statusColor)
                 .frame(width: 8, height: 8)
-            
+
             Text(status?.rawValue.capitalized ?? "Unknown")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
     }
-    
+
     private var statusColor: Color {
         switch status {
         case .alive:

@@ -5,12 +5,11 @@
 //  Created by Humberto Alejandro Zepeda González on 18/09/25.
 //
 
-
 import SwiftUI
 
 struct SectionRowView: View {
     var section: SectionRowModel
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             if let url = URL(string: section.image) {
@@ -36,7 +35,7 @@ struct SectionRowView: View {
                     .accentColor(.white)
             }
             Spacer()
-            
+
             // Favorite button
             FavoriteButton(characterId: section.id)
         }

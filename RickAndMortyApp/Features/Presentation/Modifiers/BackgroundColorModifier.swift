@@ -16,7 +16,7 @@ extension View {
 struct BackgroundColor: ViewModifier {
     var opacity: Double = 0.6
     @Environment(\.colorScheme) var colorScheme
-    
+
     func body(content: Content) -> some View {
         content
             .overlay(
@@ -27,4 +27,3 @@ struct BackgroundColor: ViewModifier {
             )
     }
 }
-

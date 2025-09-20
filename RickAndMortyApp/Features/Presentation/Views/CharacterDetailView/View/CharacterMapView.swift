@@ -16,7 +16,7 @@ struct CharacterMapView: View {
         span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     )
     @State private var annotations: [CharacterAnnotation] = []
-    
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -39,7 +39,7 @@ struct CharacterMapView: View {
                                     .stroke(Color.blue, lineWidth: 3)
                             )
                             .shadow(radius: 5)
-                            
+
                             Text(character.name)
                                 .font(.caption)
                                 .fontWeight(.semibold)
@@ -51,10 +51,10 @@ struct CharacterMapView: View {
                     }
                 }
                 .ignoresSafeArea()
-                
+
                 VStack {
                     Spacer()
-                    
+
                     // Location Info Card
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
@@ -64,11 +64,11 @@ struct CharacterMapView: View {
                                 .font(.headline)
                                 .fontWeight(.semibold)
                         }
-                        
+
                         Text(character.location.name)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        
+
                         Text("Estado: \(character.status?.rawValue.capitalized ?? "Desconocido")")
                             .font(.caption)
                             .foregroundColor(.secondary)
@@ -94,16 +94,16 @@ struct CharacterMapView: View {
             setupMapLocation()
         }
     }
-    
+
     private func setupMapLocation() {
         // Simulate character location based on their location name
         let simulatedLocation = getSimulatedLocation(for: character.location.name)
-        
+
         region = MKCoordinateRegion(
             center: simulatedLocation,
             span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
         )
-        
+
         annotations = [
             CharacterAnnotation(
                 coordinate: simulatedLocation,
@@ -111,7 +111,7 @@ struct CharacterMapView: View {
             )
         ]
     }
-    
+
     private func getSimulatedLocation(for locationName: String) -> CLLocationCoordinate2D {
         // Simulate different locations based on character location names
         switch locationName.lowercased() {

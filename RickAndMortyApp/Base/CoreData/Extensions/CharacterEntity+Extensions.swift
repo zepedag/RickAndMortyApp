@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension CharacterEntity {
-    
+
     /// Creates a CharacterEntity from CharacterBusinessModel
     static func create(from character: CharacterBusinessModel, context: NSManagedObjectContext) -> CharacterEntity {
         let entity = CharacterEntity(context: context)
@@ -30,12 +30,12 @@ extension CharacterEntity {
         entity.lastUpdated = Date()
         return entity
     }
-    
+
     /// Converts CharacterEntity to CharacterBusinessModel
     func toBusinessModel() -> CharacterBusinessModel {
         let origin = LocationBusinessModel(name: originName ?? "", url: originUrl ?? "")
         let location = LocationBusinessModel(name: locationName ?? "", url: locationUrl ?? "")
-        
+
         return CharacterBusinessModel(
             id: Int(id),
             name: name ?? "",
@@ -51,7 +51,7 @@ extension CharacterEntity {
             created: created ?? ""
         )
     }
-    
+
     /// Updates existing CharacterEntity with new data
     func update(with character: CharacterBusinessModel) {
         self.name = character.name

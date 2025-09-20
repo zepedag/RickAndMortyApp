@@ -15,7 +15,7 @@ protocol CharacterUseCase {
     /// - Throws: An error if the request fails.
     /// - Returns: A business model representing the character list.
     func getCharacterList(pageNumber: String?) async throws -> CharacterListBusinessModel
-    
+
     /// Searches for characters by name.
     ///
     /// - Parameters:
@@ -29,14 +29,14 @@ protocol CharacterUseCase {
 class DefaultCharacterUseCase: CharacterUseCase {
     /// Repository for fetching character data.
     private let repository: CharacterRepository
-    
+
     /// Initializes a new DefaultCharacterUseCase.
     ///
     /// - Parameter repository: The repository for character-related logic. Defaults to `DefaultCharacterRepository()`.
     init(repository: CharacterRepository = DefaultCharacterRepository()) {
         self.repository = repository
     }
-    
+
     /// Fetches the character list for a given page number.
     ///
     /// - Parameter pageNumber: Optional page number for pagination.
@@ -50,7 +50,7 @@ class DefaultCharacterUseCase: CharacterUseCase {
             throw error
         }
     }
-    
+
     /// Searches for characters by name.
     ///
     /// - Parameters:
@@ -68,5 +68,3 @@ class DefaultCharacterUseCase: CharacterUseCase {
         }
     }
 }
-
-

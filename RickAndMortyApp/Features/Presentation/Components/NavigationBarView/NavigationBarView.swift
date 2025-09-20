@@ -10,12 +10,12 @@ import Combine
 
 struct NavigationBarView: View {
     var title: String = ""
-    
+
     @State var showSheet = false
     @Binding var contentHasScrolled: Bool
     @EnvironmentObject var model: NavigationBarModel
     @EnvironmentObject var router: Router
-    
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -26,7 +26,7 @@ struct NavigationBarView: View {
                 .frame(maxHeight: .infinity, alignment: .top)
                 .blur(radius: contentHasScrolled ? 10 : 0)
                 .opacity(contentHasScrolled ? 1 : 0)
-            
+
             Text(title)
                 .animatableFont(size: contentHasScrolled ? 22 : 34, weight: .bold)
                 .foregroundStyle(.primary)
@@ -34,11 +34,11 @@ struct NavigationBarView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 24)
                 .opacity(contentHasScrolled ? 0.7 : 1)
-            
+
             HStack(spacing: 16) {
                 // Network Status Indicator
                 CompactNetworkStatusIndicator()
-                
+
                 // Locations Button
                 Button {
                     router.pushView(.locations)
@@ -50,7 +50,7 @@ struct NavigationBarView: View {
                         .background(.ultraThinMaterial)
                         .backgroundStyle(cornerRadius: 16, opacity: 0.4)
                 }
-                
+
                 // Favorites Button
                 Button {
                     router.pushView(.favorites)
@@ -62,7 +62,7 @@ struct NavigationBarView: View {
                         .background(.ultraThinMaterial)
                         .backgroundStyle(cornerRadius: 16, opacity: 0.4)
                 }
-                
+
                 // Search Button
                 Button {
                     showSheet.toggle()

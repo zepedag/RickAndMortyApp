@@ -10,17 +10,19 @@ import XCTest
 
 // MARK: - Test
 class HomeViewModelTest: XCTestCase {
-    
+
     // GIVEN
     var sut: HomeViewModel?
     var sutFailure: HomeViewModel?
-    
+
     override func setUp() {
         super.setUp()
-        sut = HomeViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess())))
-        sutFailure = HomeViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())))
+        sut = HomeViewModel(useCase: DefaultCharacterUseCase(repository:
+                                                                DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess())))
+        sutFailure = HomeViewModel(useCase: DefaultCharacterUseCase(repository:
+                                                                DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())))
     }
-    
+
     override func tearDown() {
         sut = nil
         sutFailure = nil
@@ -50,6 +52,3 @@ extension HomeViewModelTest {
         XCTAssertTrue(sutFailure.hasError)
     }
 }
-
-
-

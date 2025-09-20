@@ -14,7 +14,7 @@ struct CharacterDetailView: View {
     var localStorageUseCase: LocalStorageUseCase = LocalStorageUseCase()
     @State private var visibleEpisodesCount: Int = 5
     @State private var showMapView = false
-    
+
     var body: some View {
         ScrollView {
             imageView
@@ -30,7 +30,7 @@ struct CharacterDetailView: View {
             }
         }
     }
-    
+
     var imageView: some View {
         Group {
             if let character,
@@ -44,7 +44,7 @@ struct CharacterDetailView: View {
         }
         .frame(height: 400)
     }
-    
+
     var closeButtonView: some View {
         ZStack {
             Button(action: {
@@ -63,11 +63,11 @@ struct CharacterDetailView: View {
         }
         .animation(.snappy, value: true)
     }
-    
+
     var detailView: some View {
         GeometryReader { proxy in
             let scrollY = proxy.frame(in: .named("scroll")).minY
-            
+
             VStack {
                 Spacer()
             }
@@ -79,153 +79,153 @@ struct CharacterDetailView: View {
                         .font(.title).bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(.primary)
-                        
+
                     Divider()
                         .foregroundColor(.secondary)
-                
+
                     if let status = character?.status?.rawValue {
                         Text("Status: \(String(describing: status))".uppercased())
                             .font(.footnote).bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.primary.opacity(0.7))
-                        
+
                         Divider()
                             .foregroundColor(.secondary)
                     }
-                    
+
                     if let species = character?.species {
                         Text("Species: \(String(describing: species))".uppercased())
                             .font(.footnote).bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.primary.opacity(0.7))
-                        
+
                         Divider()
                             .foregroundColor(.secondary)
                     }
-                    
+
                     if let type = character?.type, !type.isEmpty {
                         Text("Type: \(String(describing: type))".uppercased())
                             .font(.footnote).bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.primary.opacity(0.7))
-                        
+
                         Divider()
                             .foregroundColor(.secondary)
                     }
-                    
+
                     if let gender = character?.gender?.rawValue {
-                        
+
                         Text("Gender: \(String(describing: gender))".uppercased())
                             .font(.footnote).bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.primary.opacity(0.7))
-                        
+
                         Divider()
                             .foregroundColor(.secondary)
                     }
-                    
+
                     if let origin = character?.origin.name {
                         Text("Origin: \(String(describing: origin))".uppercased())
                             .font(.footnote).bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundColor(.primary.opacity(0.7))
-                        
+
                         Divider()
                             .foregroundColor(.secondary)
                     }
-                   
-                            if let location = character?.location.name {
-                                Text("Location: \(String(describing: location))".uppercased())
-                                    .font(.footnote).bold()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .foregroundColor(.primary.opacity(0.7))
-                                
-                                Divider()
-                                    .foregroundColor(.secondary)
+
+                    if let location = character?.location.name {
+                        Text("Location: \(String(describing: location))".uppercased())
+                            .font(.footnote).bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundColor(.primary.opacity(0.7))
+
+                        Divider()
+                            .foregroundColor(.secondary)
+                    }
+
+                    // Map Button
+                    if let character = character {
+                        Button(action: {
+                            showMapView = true
+                        }) {
+                            HStack {
+                                Image(systemName: "map")
+                                    .font(.system(size: 16, weight: .medium))
+                                Text("Ver en mapa")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
                             }
-                            
-                            // Map Button
-                            if let character = character {
-                                Button(action: {
-                                    showMapView = true
-                                }) {
-                                    HStack {
-                                        Image(systemName: "map")
-                                            .font(.system(size: 16, weight: .medium))
-                                        Text("Ver en mapa")
-                                            .font(.subheadline)
-                                            .fontWeight(.medium)
-                                    }
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 20)
-                                    .padding(.vertical, 12)
-                                    .background(Color.blue)
-                                    .cornerRadius(12)
-                                    .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(Color.blue)
+                            .cornerRadius(12)
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.plain)
+
+                        Divider()
+                            .foregroundColor(.secondary)
+                    }
+
+                    // Episodes section - Expandable version
+                    if let character = character, !character.episodes.isEmpty {
+                        VStack(alignment: .leading, spacing: 12) {
+                            // Episodes header
+                            HStack {
+                                Text("Episodes")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+
+                                Spacer()
+
+                                Text("\(character.episodes.count) episodes")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(.ultraThinMaterial)
+                                    .backgroundStyle(cornerRadius: 8)
+                            }
+
+                            // Expandable episodes list
+                            LazyVStack(spacing: 6) {
+                                ForEach(character.episodes.prefix(visibleEpisodesCount), id: \.self) { episodeUrl in
+                                    CompactEpisodeRow(
+                                        episodeUrl: episodeUrl,
+                                        characterId: character.id,
+                                        localStorageUseCase: localStorageUseCase
+                                    )
                                 }
-                                .buttonStyle(.plain)
-                                
-                                Divider()
-                                    .foregroundColor(.secondary)
-                            }
-                    
-                            // Episodes section - Expandable version
-                            if let character = character, !character.episodes.isEmpty {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    // Episodes header
-                                    HStack {
-                                        Text("Episodes")
-                                            .font(.headline)
-                                            .fontWeight(.semibold)
-                                            .foregroundColor(.primary)
-                                        
-                                        Spacer()
-                                        
-                                        Text("\(character.episodes.count) episodes")
+
+                                // Show "more episodes" button if there are more episodes to show
+                                if visibleEpisodesCount < character.episodes.count {
+                                    Button(action: {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            let remainingEpisodes = character.episodes.count - visibleEpisodesCount
+                                            let nextBatch = min(5, remainingEpisodes)
+                                            visibleEpisodesCount += nextBatch
+                                        }
+                                    }) {
+                                        Text("+ \(character.episodes.count - visibleEpisodesCount) more episodes")
                                             .font(.caption)
-                                            .foregroundColor(.secondary)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 4)
+                                            .foregroundColor(.blue)
+                                            .padding(.top, 4)
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal, 12)
                                             .background(.ultraThinMaterial)
                                             .backgroundStyle(cornerRadius: 8)
                                     }
-                                    
-                                    // Expandable episodes list
-                                    LazyVStack(spacing: 6) {
-                                        ForEach(character.episodes.prefix(visibleEpisodesCount), id: \.self) { episodeUrl in
-                                            CompactEpisodeRow(
-                                                episodeUrl: episodeUrl,
-                                                characterId: character.id,
-                                                localStorageUseCase: localStorageUseCase
-                                            )
-                                        }
-                                        
-                                        // Show "more episodes" button if there are more episodes to show
-                                        if visibleEpisodesCount < character.episodes.count {
-                                            Button(action: {
-                                                withAnimation(.easeInOut(duration: 0.3)) {
-                                                    let remainingEpisodes = character.episodes.count - visibleEpisodesCount
-                                                    let nextBatch = min(5, remainingEpisodes)
-                                                    visibleEpisodesCount += nextBatch
-                                                }
-                                            }) {
-                                                Text("+ \(character.episodes.count - visibleEpisodesCount) more episodes")
-                                                    .font(.caption)
-                                                    .foregroundColor(.blue)
-                                                    .padding(.top, 4)
-                                                    .padding(.vertical, 8)
-                                                    .padding(.horizontal, 12)
-                                                    .background(.ultraThinMaterial)
-                                                    .backgroundStyle(cornerRadius: 8)
-                                            }
-                                            .buttonStyle(.plain)
-                                        }
-                                    }
+                                    .buttonStyle(.plain)
                                 }
-                                .padding(16)
-                                .background(.ultraThinMaterial)
-                                .backgroundStyle(cornerRadius: 16)
                             }
+                        }
+                        .padding(16)
+                        .background(.ultraThinMaterial)
+                        .backgroundStyle(cornerRadius: 16)
+                    }
                 }
                 .padding(20)
                 .padding(.vertical, 10)
@@ -258,7 +258,7 @@ struct CompactEpisodeRow: View {
     let characterId: Int
     let localStorageUseCase: LocalStorageUseCase
     @State private var isWatched: Bool = false
-    
+
     var body: some View {
         HStack(spacing: 8) {
             // Episode icon
@@ -266,15 +266,15 @@ struct CompactEpisodeRow: View {
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(.blue)
                 .frame(width: 16, height: 16)
-            
+
             // Episode info
             Text(episodeTitle)
                 .font(.caption)
                 .fontWeight(.medium)
                 .foregroundColor(.primary)
-            
+
             Spacer()
-            
+
             // Watch status toggle
             Button(action: {
                 isWatched = localStorageUseCase.toggleEpisodeStatus(
@@ -302,7 +302,7 @@ struct CompactEpisodeRow: View {
             )
         }
     }
-    
+
     private var episodeTitle: String {
         if let url = URL(string: episodeUrl),
            let episodeNumber = url.lastPathComponent.components(separatedBy: "/").last {
@@ -310,7 +310,7 @@ struct CompactEpisodeRow: View {
         }
         return "Unknown Episode"
     }
-    
+
     private func extractEpisodeId(from url: String) -> String {
         if let url = URL(string: url),
            let episodeId = url.lastPathComponent.components(separatedBy: "/").last {
@@ -319,4 +319,3 @@ struct CompactEpisodeRow: View {
         return url
     }
 }
-

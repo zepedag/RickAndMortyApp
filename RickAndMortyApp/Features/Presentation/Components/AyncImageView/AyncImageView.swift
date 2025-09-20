@@ -10,9 +10,9 @@ import UIKit
 
 struct AsyncImageView: View {
     let url: URL
-    
+
     @State private var image: UIImage?
-    
+
     var body: some View {
         Group {
             if let image = image {
@@ -33,15 +33,15 @@ struct AsyncImageView: View {
             }
         }
     }
-    
+
     private func downloadImage(url: URL) async throws -> UIImage {
-        let cache: NSCacheStore = NSCacheStore<String,UIImage>.shared
-        
+        let cache: NSCacheStore = NSCacheStore<String, UIImage>.shared
+
         // Check if the image is already cached
         if let cachedImage = cache[url.absoluteString] {
             return cachedImage
         }
-        
+
         // Download the image if not cached
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
@@ -53,7 +53,7 @@ struct AsyncImageView: View {
         } catch {
             throw ImageError.downloadFailed
         }
-        
+
         throw ImageError.downloadFailed
     }
 
@@ -61,4 +61,3 @@ struct AsyncImageView: View {
         case downloadFailed
     }
 }
-

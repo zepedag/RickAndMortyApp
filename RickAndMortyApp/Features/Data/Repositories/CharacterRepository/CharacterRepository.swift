@@ -19,13 +19,13 @@ protocol CharacterRepository {
 class DefaultCharacterRepository: CharacterRepository {
     // ApiService instance used to make API requests.
     private let apiService: ApiService
-    private let cache: NSCacheStore = NSCacheStore<String,CharacterListResponse>.shared
-    
+    private let cache: NSCacheStore = NSCacheStore<String, CharacterListResponse>.shared
+
     /// Initializes a new repository with an ApiService.
     init(apiService: ApiService = DefaultApiService()) {
         self.apiService = apiService
     }
-    
+
     /// Fetches the character list for a given page number.
     /// First tries to get data from cache, otherwise makes an API call.
     func getCharacterList(pageNumber: String?) async throws -> CharacterListResponse {
@@ -33,7 +33,7 @@ class DefaultCharacterRepository: CharacterRepository {
         if let cachedResponse = retreive(by: pageNumber ?? "1") {
             return cachedResponse
         }
-    
+
         do {
             // Construct endpoint URL
             let endpoint = RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.pagination + (pageNumber ?? "1")
@@ -46,7 +46,7 @@ class DefaultCharacterRepository: CharacterRepository {
             throw error
         }
     }
-    
+
     /// Searches for characters by name and optionally by page number.
     func searchCharacter(by name: String,
                          and pageNumber: String?) async throws -> CharacterListResponse {
@@ -64,7 +64,7 @@ extension DefaultCharacterRepository {
     private func retreive(by pageNumber: String) -> CharacterListResponse? {
         cache[pageNumber]
     }
-    
+
     /// Saves the data to cache for a given page number.
     private func save(with pageNumber: String, response: CharacterListResponse) {
         cache[pageNumber] = response
@@ -76,10 +76,10 @@ extension DefaultCharacterRepository {
     /// Constructs the API endpoint for searching with pagination.
     private func getEndpointForPagination(by name: String, and pageNumber: String?) -> String {
         if let pageNumber = pageNumber {
-            return RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.name + name + RemoteURL.searchPagination + pageNumber
+            return RemoteURL.baseUrl + RemoteURL.characterUrl +
+            RemoteURL.name + name + RemoteURL.searchPagination + pageNumber
         } else {
             return RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.name + name
         }
     }
 }
-

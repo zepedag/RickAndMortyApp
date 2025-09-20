@@ -11,9 +11,9 @@ import CoreData
 /// CoreData stack manager for local storage
 class CoreDataStack {
     static let shared = CoreDataStack()
-    
+
     private init() {}
-    
+
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "RickAndMortyModel")
         container.loadPersistentStores { _, error in
@@ -23,14 +23,14 @@ class CoreDataStack {
         }
         return container
     }()
-    
+
     var context: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
-    
+
     func saveContext() {
         let context = persistentContainer.viewContext
-        
+
         if context.hasChanges {
             do {
                 try context.save()

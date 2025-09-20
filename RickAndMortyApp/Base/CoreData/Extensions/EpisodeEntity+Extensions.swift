@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension EpisodeEntity {
-    
+
     /// Creates an EpisodeEntity for a watched episode
     static func create(episodeId: String, characterId: Int, context: NSManagedObjectContext) -> EpisodeEntity {
         let entity = EpisodeEntity(context: context)

@@ -14,12 +14,12 @@ struct SearchView: View {
     @State var text = ""
     @State var showCharacterDetail = false
     @State var selectedCharacter: CharacterBusinessModel?
-    @State var selectedStatus: StatusBusinessModel? = nil
-    @State var selectedSpecies: String? = nil
+    @State var selectedStatus: StatusBusinessModel?
+    @State var selectedSpecies: String?
     @State var showStatusFilter = false
     @State var showSpeciesFilter = false
     @State var hasActiveFilters = false
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -34,7 +34,7 @@ struct SearchView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
+
                 // Filter Bar - always at bottom with smooth animation
                 filterBar
                     .transition(.asymmetric(
@@ -69,22 +69,22 @@ extension SearchView {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: task)
         viewModel.workItem = task
     }
-    
+
     private func applyFilters() {
         viewModel.applyFilters(status: selectedStatus, species: selectedSpecies)
     }
-    
+
     private func updateFilterState() {
         hasActiveFilters = selectedStatus != nil || selectedSpecies != nil
     }
-    
+
     private func clearAllFilters() {
         selectedStatus = nil
         selectedSpecies = nil
         hasActiveFilters = false
         viewModel.clearFilters()
     }
-    
+
     private var filterBar: some View {
         HStack(alignment: .top, spacing: 12) {
             // Filter Selection Buttons - More space now
@@ -130,7 +130,7 @@ extension SearchView {
                     }
                     Button("Cancel", role: .cancel) { }
                 }
-                
+
                 // Species Filter
                 Button(action: {
                     showSpeciesFilter.toggle()
@@ -182,9 +182,9 @@ extension SearchView {
                     Button("Cancel", role: .cancel) { }
                 }
             }
-            
+
             Spacer()
-            
+
             // Action Buttons - Vertical Stack
             if hasActiveFilters {
                 VStack(spacing: 6) {
@@ -211,7 +211,7 @@ extension SearchView {
                         removal: .scale.combined(with: .opacity)
                     ))
                     .animation(.easeInOut(duration: 0.2).delay(0.3), value: hasActiveFilters)
-                    
+
                     // Clear Filters Button
                     Button(action: {
                         clearAllFilters()
@@ -241,7 +241,7 @@ extension SearchView {
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
-    
+
     private var statusColor: Color {
         switch selectedStatus {
         case .alive:

@@ -12,16 +12,16 @@ struct EpisodeToggle: View {
     let characterId: Int
     @State private var isWatched: Bool = false
     @State private var isLoading: Bool = false
-    
+
     private let localStorageUseCase = LocalStorageUseCase()
-    
+
     var body: some View {
         Button(action: toggleEpisode) {
             HStack(spacing: 8) {
                 Image(systemName: isWatched ? "checkmark.circle.fill" : "circle")
                     .foregroundColor(isWatched ? .green : .gray)
                     .font(.title3)
-                
+
                 Text(isWatched ? "Watched" : "Mark as Watched")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -35,14 +35,14 @@ struct EpisodeToggle: View {
             checkEpisodeStatus()
         }
     }
-    
+
     private func checkEpisodeStatus() {
         isWatched = localStorageUseCase.isEpisodeWatched(episodeId: episodeId, characterId: characterId)
     }
-    
+
     private func toggleEpisode() {
         isLoading = true
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.isWatched = self.localStorageUseCase.toggleEpisodeStatus(episodeId: self.episodeId, characterId: self.characterId)
             self.isLoading = false

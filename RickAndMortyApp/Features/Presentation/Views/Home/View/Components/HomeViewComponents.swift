@@ -9,7 +9,7 @@ import SwiftUI
 
 extension HomeView {
     var scrollView: some View {
-        ScrollView() {
+        ScrollView {
             scrollDetectionView
             characterListView
                 .padding(.vertical, 70)
@@ -20,7 +20,7 @@ extension HomeView {
             await viewModel.refreshCharacterList()
         }
     }
-    
+
     var scrollDetectionView: some View {
         GeometryReader { proxy in
             let offset = proxy.frame(in: .named("scroll")).minY
@@ -74,24 +74,24 @@ extension HomeView {
             }
         }
     }
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 20) {
             Image(systemName: "person.3")
                 .font(.system(size: 60))
                 .foregroundColor(.secondary)
-            
+
             Text("No Characters Available")
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
-            
+
             Text("Unable to load characters at the moment")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
-            
+
             Button(action: {
                 Task {
                     await viewModel.loadCharacterList()
@@ -119,4 +119,3 @@ extension HomeView {
         .padding(.horizontal, 20)
     }
 }
-

@@ -16,7 +16,7 @@ struct LocationsView: View {
     )
     @State private var selectedCharacter: CharacterBusinessModel?
     @State private var showCharacterDetail = false
-    
+
     // Sample characters with different locations for demonstration
     private let sampleCharacters: [CharacterBusinessModel] = [
         CharacterBusinessModel(
@@ -215,22 +215,9 @@ struct LocationsView: View {
             url: "",
             created: ""
         ),
-        CharacterBusinessModel(
-            id: 15,
-            name: "Alien Rick",
-            status: .unknown,
-            species: "Alien",
-            type: "",
-            gender: .male,
-            origin: LocationBusinessModel(name: "Unknown", url: ""),
-            location: LocationBusinessModel(name: "Unknown", url: ""),
-            image: "https://rickandmortyapi.com/api/character/avatar/15.jpeg",
-            episodes: ["1", "2", "3"],
-            url: "",
-            created: ""
-        )
+ 
     ]
-    
+
     private var characterAnnotations: [CharacterAnnotation] {
         sampleCharacters.map { character in
             CharacterAnnotation(
@@ -266,7 +253,7 @@ struct LocationsView: View {
                                         .stroke(statusColor(for: annotation.character.status), lineWidth: 3)
                                 )
                                 .shadow(radius: 3)
-                                
+
                                 Text(annotation.character.name)
                                     .font(.caption2)
                                     .fontWeight(.semibold)
@@ -281,10 +268,10 @@ struct LocationsView: View {
                     }
                 }
                 .ignoresSafeArea()
-                
+
                 VStack {
                     Spacer()
-                    
+
                     // Info Card
                     VStack(alignment: .leading, spacing: 12) {
                         HStack {
@@ -294,18 +281,18 @@ struct LocationsView: View {
                                 .font(.headline)
                                 .fontWeight(.semibold)
                         }
-                        
+
                         Text("Toca cualquier personaje en el mapa para ver sus detalles")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
-                        
+
                         HStack {
                             Text("\(sampleCharacters.count) personajes")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            
+
                             Spacer()
-                            
+
                             Text("Coordenadas simuladas")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -334,7 +321,7 @@ struct LocationsView: View {
             }
         }
     }
-    
+
     private func statusColor(for status: StatusBusinessModel?) -> Color {
         switch status {
         case .alive:
@@ -347,7 +334,7 @@ struct LocationsView: View {
             return .gray
         }
     }
-    
+
     private func getSimulatedLocation(for locationName: String) -> CLLocationCoordinate2D {
         switch locationName.lowercased() {
         case "earth (c-137)":

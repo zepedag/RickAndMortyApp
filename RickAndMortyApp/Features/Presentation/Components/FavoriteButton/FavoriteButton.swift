@@ -11,9 +11,9 @@ struct FavoriteButton: View {
     let characterId: Int
     @State private var isFavorite: Bool = false
     @State private var isLoading: Bool = false
-    
+
     private let localStorageUseCase = LocalStorageUseCase()
-    
+
     var body: some View {
         Button(action: toggleFavorite) {
             Image(systemName: isFavorite ? "heart.fill" : "heart")
@@ -28,14 +28,14 @@ struct FavoriteButton: View {
             checkFavoriteStatus()
         }
     }
-    
+
     private func checkFavoriteStatus() {
         isFavorite = localStorageUseCase.isFavorite(characterId: characterId)
     }
-    
+
     private func toggleFavorite() {
         isLoading = true
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.isFavorite = self.localStorageUseCase.toggleFavorite(characterId: self.characterId)
             self.isLoading = false

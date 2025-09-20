@@ -10,32 +10,32 @@ import SwiftUI
 /// View for biometric authentication before accessing favorites
 struct AuthenticationView: View {
     @Bindable var authViewModel: AuthenticationViewModel
-    
+
     var body: some View {
         VStack(spacing: 32) {
             Spacer()
-            
+
             // Icon
             VStack(spacing: 16) {
                 Image(systemName: getBiometricIcon())
                     .font(.system(size: 80))
                     .foregroundColor(.primary)
                     .symbolEffect(.bounce, value: authViewModel.isAuthenticating)
-                
+
                 Text("Secure Access")
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
-                
+
                 Text("Use \(authViewModel.biometricType) to access your favorite characters")
                     .font(.body)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 32)
             }
-            
+
             Spacer()
-            
+
             // Authentication Button
             VStack(spacing: 16) {
                 Button(action: {
@@ -52,7 +52,7 @@ struct AuthenticationView: View {
                             Image(systemName: getBiometricIcon())
                                 .font(.system(size: 20, weight: .medium))
                         }
-                        
+
                         Text(authViewModel.isAuthenticating ? "Authenticating..." : "Authenticate with \(authViewModel.biometricType)")
                             .font(.headline)
                             .fontWeight(.semibold)
@@ -72,7 +72,7 @@ struct AuthenticationView: View {
                 }
                 .disabled(authViewModel.isAuthenticating || !authViewModel.isBiometricAvailable)
                 .opacity(authViewModel.isBiometricAvailable ? 1.0 : 0.6)
-                
+
                 if !authViewModel.isBiometricAvailable {
                     Text("Biometric authentication is not available on this device")
                         .font(.caption)
@@ -81,7 +81,7 @@ struct AuthenticationView: View {
                 }
             }
             .padding(.horizontal, 32)
-            
+
             Spacer()
         }
         .padding()
@@ -94,7 +94,7 @@ struct AuthenticationView: View {
             Text(authViewModel.authenticationError ?? "Unknown error occurred")
         }
     }
-    
+
     /// Gets the appropriate icon for the biometric type
     private func getBiometricIcon() -> String {
         switch authViewModel.biometricType {

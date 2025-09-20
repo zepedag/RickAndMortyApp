@@ -1,4 +1,3 @@
-
 //  RickAndMortyApp
 //
 //  Created by Humberto Alejandro Zepeda González on 18/09/25.
@@ -14,11 +13,11 @@ extension SearchView {
                 if index != 0 {
                     Divider()
                 }
-                
+
                 Button {
                     showCharacterDetail = true
                     selectedCharacter = character
-                } label:  {
+                } label: {
                     ListRow(title: character.name, image: character.image)
                     if viewModel.isLoading {
                         ProgressView()
@@ -37,7 +36,7 @@ extension SearchView {
             CharacterDetailView(character: selectedCharacter)
         }
     }
-    
+
     var scrollDetectionView: some View {
         GeometryReader { proxy in
             let offset = proxy.frame(in: .named("scrollview")).minY
@@ -55,39 +54,39 @@ extension SearchView {
             }
         }
     }
-    
+
     var emptyView: some View {
         VStack(spacing: 20) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 60))
                 .foregroundColor(.secondary)
-            
+
             Text("No Results Found")
                 .font(.title2)
                 .fontWeight(.semibold)
                 .foregroundColor(.primary)
-            
+
             Text("Try adjusting your search terms or filters")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 40)
-            
+
             // Suggestions
             VStack(spacing: 8) {
                 Text("Suggestions:")
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(.secondary)
-                
+
                 Text("• Check your spelling")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text("• Try different keywords")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text("• Clear filters")
                     .font(.caption)
                     .foregroundColor(.secondary)

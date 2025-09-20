@@ -16,7 +16,6 @@ struct RickAndMortyAppApp: App {
                 ContentView()
             }.environmentObject(router)
 
-            
         }
     }
 }

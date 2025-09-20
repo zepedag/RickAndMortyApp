@@ -13,7 +13,7 @@ struct EpisodeList: View {
     let characterId: Int
     let localStorageUseCase: LocalStorageUseCase
     @State private var watchedEpisodes: Set<String> = []
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
@@ -22,9 +22,9 @@ struct EpisodeList: View {
                     .font(.headline)
                     .fontWeight(.semibold)
                     .foregroundColor(.primary)
-                
+
                 Spacer()
-                
+
                 Text("\(watchedEpisodes.count)/\(episodes.count)")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -33,12 +33,12 @@ struct EpisodeList: View {
                     .background(.ultraThinMaterial)
                     .backgroundStyle(cornerRadius: 8)
             }
-            
+
             // Progress bar
             ProgressView(value: Double(watchedEpisodes.count), total: Double(episodes.count))
                 .progressViewStyle(LinearProgressViewStyle(tint: .blue))
                 .scaleEffect(y: 2)
-            
+
             // Episodes list
             if episodes.isEmpty {
                 emptyState
@@ -50,20 +50,20 @@ struct EpisodeList: View {
             loadWatchedEpisodes()
         }
     }
-    
+
     // MARK: - Views
-    
+
     private var emptyState: some View {
         VStack(spacing: 12) {
             Image(systemName: "tv.slash")
                 .font(.system(size: 32))
                 .foregroundColor(.secondary)
-            
+
             Text("No Episodes")
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .foregroundColor(.secondary)
-            
+
             Text("This character doesn't appear in any episodes")
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -74,7 +74,7 @@ struct EpisodeList: View {
         .background(.ultraThinMaterial)
         .backgroundStyle(cornerRadius: 12)
     }
-    
+
     private var episodesList: some View {
         LazyVStack(spacing: 8) {
             ForEach(episodes, id: \.self) { episodeUrl in
@@ -92,16 +92,16 @@ struct EpisodeList: View {
             }
         }
     }
-    
+
     // MARK: - Methods
-    
+
     private func loadWatchedEpisodes() {
         watchedEpisodes = Set(localStorageUseCase.getWatchedEpisodes(for: characterId))
     }
-    
+
     private func toggleEpisode(_ episodeUrl: String) {
         let episodeId = extractEpisodeId(from: episodeUrl)
-        
+
         if watchedEpisodes.contains(episodeUrl) {
             // Mark as not watched
             localStorageUseCase.markEpisodeAsNotWatched(episodeId: episodeId, characterId: characterId)
@@ -112,7 +112,7 @@ struct EpisodeList: View {
             watchedEpisodes.insert(episodeUrl)
         }
     }
-    
+
     private func extractEpisodeId(from url: String) -> String {
         // Extract episode ID from URL (e.g., "https://rickandmortyapi.com/api/episode/1" -> "1")
         if let url = URL(string: url),

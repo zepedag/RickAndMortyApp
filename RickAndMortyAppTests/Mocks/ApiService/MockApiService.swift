@@ -11,7 +11,7 @@ import Foundation
 
 class CharacterListFakeApiServiceSuccess: ApiService {
     func getDataFromGetRequest<Response: Codable>(from url: String) async throws -> Response {
-        
+
         do {
             let json = CharacterListFake.makeCharacterListJsonFake()
             let decodedData = try JSONDecoder().decode(Response.self, from: json)
@@ -28,13 +28,13 @@ class CharacterListFakeApiServiceSuccess: ApiService {
 }
 
 class CharacterListFakeApiServiceFailure: ApiService {
-    func getDataFromGetRequest<Response : Codable>(from url: String) async throws -> Response  {
+    func getDataFromGetRequest<Response: Codable>(from url: String) async throws -> Response {
         throw AppError.missingData
     }
 }
 
 class CharacterListFakeApiServiceParseErrorFailure: ApiService {
-    func getDataFromGetRequest<Response : Codable>(from url: String) async throws -> Response  {
+    func getDataFromGetRequest<Response: Codable>(from url: String) async throws -> Response {
         do {
             let json = CharacterListFake.makeCharacterListJsonFakeParseError()
             let decodedData = try JSONDecoder().decode(Response.self, from: json)
