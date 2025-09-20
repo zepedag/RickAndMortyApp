@@ -76,8 +76,7 @@ extension DefaultCharacterRepository {
     /// Constructs the API endpoint for searching with pagination.
     private func getEndpointForPagination(by name: String, and pageNumber: String?) -> String {
         if let pageNumber = pageNumber {
-            return RemoteURL.baseUrl + RemoteURL.characterUrl +
-            RemoteURL.name + name + RemoteURL.searchPagination + pageNumber
+            return RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.name + name + RemoteURL.searchPagination + pageNumber
         } else {
             return RemoteURL.baseUrl + RemoteURL.characterUrl + RemoteURL.name + name
         }

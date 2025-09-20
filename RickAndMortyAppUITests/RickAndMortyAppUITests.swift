@@ -29,9 +29,7 @@ final class RickAndMortyAppUITests: XCTestCase {
         app.launch()
 
         // 1. Verify app launched successfully
-        XCTAssertTrue(app.staticTexts["Characters"].waitForExistence(timeout:
-                                                                        15.0),
-                      "Characters title should be visible")
+        XCTAssertTrue(app.staticTexts["Characters"].waitForExistence(timeout: 15.0), "Characters title should be visible")
         print("App launched successfully")
 
         // 2. Wait for characters to load

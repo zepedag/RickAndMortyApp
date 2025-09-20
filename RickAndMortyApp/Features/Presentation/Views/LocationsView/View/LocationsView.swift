@@ -214,8 +214,7 @@ struct LocationsView: View {
             episodes: ["1", "2", "3"],
             url: "",
             created: ""
-        ),
- 
+        )
     ]
 
     private var characterAnnotations: [CharacterAnnotation] {
