@@ -239,7 +239,7 @@ struct LocationsView: View {
             )
         }
     }
-    
+
     var body: some View {
         NavigationView {
             ZStack {

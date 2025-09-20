@@ -11,7 +11,7 @@ import Foundation
 struct CharacterListBusinessModel {
     let info: InfoBusinessModel
     let results: [CharacterBusinessModel]
-    
+        
     init(response: CharacterListResponse) {
         info = InfoBusinessModel(next: response.info.next ?? "",
                                  prev: response.info.prev ?? "")
