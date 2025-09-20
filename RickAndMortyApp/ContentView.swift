@@ -21,7 +21,7 @@ struct ContentView: View {
         }
         .onAppear {
             // Network monitoring starts automatically
-            print("📱 ContentView: Network monitoring is automatic")
+            print("ContentView: Network monitoring is automatic")
         }
     }
 }
