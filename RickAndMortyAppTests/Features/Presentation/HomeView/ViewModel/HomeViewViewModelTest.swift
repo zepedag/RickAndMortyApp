@@ -20,7 +20,7 @@ class HomeViewModelTest: XCTestCase {
         sut = HomeViewModel(useCase: DefaultCharacterUseCase(repository:
                                                                 DefaultCharacterRepository(apiService: CharacterListFakeApiServiceSuccess())))
         sutFailure = HomeViewModel(useCase: DefaultCharacterUseCase(repository:
-                                                                DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())))
+                                                                        DefaultCharacterRepository(apiService: CharacterListFakeApiServiceFailure())))
     }
 
     override func tearDown() {

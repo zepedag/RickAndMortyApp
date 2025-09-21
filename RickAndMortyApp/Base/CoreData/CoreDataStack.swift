@@ -12,7 +12,7 @@ import CoreData
 class CoreDataStack {
     static let shared = CoreDataStack()
 
-    private init() {}
+    init() {}
 
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "RickAndMortyModel")
