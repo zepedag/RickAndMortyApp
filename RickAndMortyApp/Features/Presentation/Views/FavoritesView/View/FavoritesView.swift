@@ -10,7 +10,7 @@ import Observation
 
 struct FavoritesView: View {
     @Bindable var viewModel: FavoritesViewModel
-    @State private var authViewModel = AuthenticationViewModel()
+    @State private var authViewModel: AuthenticationViewModel = DependencyContainer.shared.resolveAuthenticationViewModel()
     @State private var showCharacterDetail = false
     @State private var selectedCharacter: CharacterBusinessModel?
     @EnvironmentObject var router: Router

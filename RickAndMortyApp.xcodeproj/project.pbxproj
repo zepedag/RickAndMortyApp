@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A920E3852E7F8A9500D87723 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = A920E3842E7F8A9500D87723 /* Swinject */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A9BE3F502E7BABDF008F6FA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A920E3852E7F8A9500D87723 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +118,7 @@
 			);
 			name = RickAndMortyApp;
 			packageProductDependencies = (
+				A920E3842E7F8A9500D87723 /* Swinject */,
 			);
 			productName = RickAndMortyApp;
 			productReference = A9BE3F422E7BABDE008F6FA8 /* RickAndMortyApp.app */;
@@ -196,6 +202,9 @@
 			);
 			mainGroup = A9BE3F392E7BABDE008F6FA8;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A920E3832E7F8A9500D87723 /* XCRemoteSwiftPackageReference "Swinject" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A9BE3F432E7BABDE008F6FA8 /* Products */;
 			projectDirPath = "";
@@ -594,6 +603,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A920E3832E7F8A9500D87723 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A920E3842E7F8A9500D87723 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A920E3832E7F8A9500D87723 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A9BE3F3A2E7BABDE008F6FA8 /* Project object */;
 }

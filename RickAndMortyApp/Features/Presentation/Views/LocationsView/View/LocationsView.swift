@@ -152,7 +152,7 @@ struct LocationsView: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("Estado de los personajes:").font(.caption).fontWeight(.medium).foregroundColor(.primary)
-                
+
                 HStack(spacing: 12) {
                     HStack(spacing: 4) {
                         Circle().fill(.green).frame(width: 12, height: 12)

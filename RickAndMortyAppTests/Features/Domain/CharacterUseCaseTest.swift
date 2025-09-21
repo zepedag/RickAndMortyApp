@@ -18,9 +18,9 @@ class CharacterUseCaseTest: XCTestCase {
     override func setUp() {
         super.setUp()
         sut = DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService:
-                                                CharacterListFakeApiServiceSuccess()))
+                                                                                CharacterListFakeApiServiceSuccess()))
         sutFailure = DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService:
-                                                CharacterListFakeApiServiceFailure()))
+                                                                                        CharacterListFakeApiServiceFailure()))
     }
 
     override func tearDown() {

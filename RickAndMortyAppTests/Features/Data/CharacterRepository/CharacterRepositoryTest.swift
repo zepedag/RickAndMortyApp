@@ -62,7 +62,7 @@ extension CharacterRepositoryTest {
 
     func testFailureCase_getCharacterListParseError() async {
         let sutFailure: CharacterRepository =
-        DefaultCharacterRepository(apiService: CharacterListFakeApiServiceParseErrorFailure())
+            DefaultCharacterRepository(apiService: CharacterListFakeApiServiceParseErrorFailure())
         do {
             _ = try await sutFailure.getCharacterList(pageNumber: nil)
             XCTFail("This test should throw an error")

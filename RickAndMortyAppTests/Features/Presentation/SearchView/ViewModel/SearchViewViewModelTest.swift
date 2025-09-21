@@ -20,7 +20,7 @@ class SearchViewModelTest: XCTestCase {
         sut = SearchViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService:
                                                                                                         CharacterListFakeApiServiceSuccess())))
         sutFailure = SearchViewModel(useCase: DefaultCharacterUseCase(repository: DefaultCharacterRepository(apiService:
-                                                                                                        CharacterListFakeApiServiceFailure())))
+                                                                                                                CharacterListFakeApiServiceFailure())))
     }
 
     override func tearDown() {

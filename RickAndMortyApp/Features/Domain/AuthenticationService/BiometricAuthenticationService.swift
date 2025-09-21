@@ -33,7 +33,7 @@ class BiometricAuthenticationService {
     /// Singleton instance
     static let shared = BiometricAuthenticationService()
 
-    private init() {}
+    init() {}
 
     /// Checks if biometric authentication is available
     func isBiometricAuthenticationAvailable() -> Bool {
