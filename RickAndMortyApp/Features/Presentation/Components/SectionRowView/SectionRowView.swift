@@ -19,7 +19,7 @@ struct SectionRowView: View {
                     .padding(12)
                     .background(Color(UIColor.systemBackground).opacity(0.3))
                     .mask(Circle())
-                    .overlay(CircularView(value: section.progress))
+                    .overlay(CircularView(value: section.progress, status: section.status))
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -49,4 +49,5 @@ struct SectionRowModel: Identifiable {
     var text: String
     var image: String
     var progress: CGFloat
+    var status: StatusBusinessModel?
 }

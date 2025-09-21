@@ -38,7 +38,7 @@ struct InfoBusinessModel {
 }
 
 // MARK: - Result
-struct CharacterBusinessModel {
+struct CharacterBusinessModel: Identifiable {
     let id: Int
     let name: String
     let status: StatusBusinessModel?

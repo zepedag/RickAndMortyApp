@@ -15,7 +15,6 @@ struct LocationsView: View {
         span: MKCoordinateSpan(latitudeDelta: 80.0, longitudeDelta: 80.0)
     )
     @State private var selectedCharacter: CharacterBusinessModel?
-    @State private var showCharacterDetail = false
 
     private let sampleCharacters: [CharacterBusinessModel] = [
         CharacterBusinessModel(
@@ -106,7 +105,6 @@ struct LocationsView: View {
                     MapAnnotation(coordinate: annotation.coordinate) {
                         Button(action: {
                             selectedCharacter = annotation.character
-                            showCharacterDetail = true
                         }) {
                             VStack {
                                 AsyncImage(url: URL(string: annotation.character.image)) { image in
@@ -137,10 +135,8 @@ struct LocationsView: View {
             .navigationBarTitleDisplayMode(.inline)
 
         }
-        .sheet(isPresented: $showCharacterDetail) {
-            if let character = selectedCharacter {
-                CharacterDetailView(character: character)
-            }
+        .sheet(item: $selectedCharacter) { character in
+            CharacterDetailView(character: character)
         }
     }
 
