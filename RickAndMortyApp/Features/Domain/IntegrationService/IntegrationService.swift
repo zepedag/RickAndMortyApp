@@ -13,8 +13,8 @@ class IntegrationService {
 
     private let localStorageUseCase: LocalStorageUseCase
 
-    private init() {
-        self.localStorageUseCase = LocalStorageUseCase()
+    init(localStorageUseCase: LocalStorageUseCase = LocalStorageUseCase()) {
+        self.localStorageUseCase = localStorageUseCase
     }
 
     // MARK: - Public Integration Methods

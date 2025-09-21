@@ -33,7 +33,7 @@ import Observation
         case unknown
     }
 
-    private init() {
+    init() {
         startMonitoring()
         // Hacer un chequeo inmediato real al inicializar
         performInitialConnectivityCheck()

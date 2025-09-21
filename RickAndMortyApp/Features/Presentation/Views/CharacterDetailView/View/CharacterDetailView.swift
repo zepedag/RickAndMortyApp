@@ -20,20 +20,20 @@ struct CharacterDetailView: View {
             // Background image (fixed at top)
             imageView
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            
+
             // Scrollable content overlay
             ScrollView {
                 VStack {
                     // Spacer to push content up to cover part of the image
                     Spacer()
                         .frame(height: 320)
-                    
+
                     // Scrollable detail content
                     detailContent
                 }
             }
             .coordinateSpace(.named("scroll"))
-            
+
             // Close button overlay (on top of everything)
             closeButtonView
         }
