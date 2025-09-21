@@ -11,7 +11,6 @@ import Observation
 struct FavoritesView: View {
     @Bindable var viewModel: FavoritesViewModel
     @State private var authViewModel: AuthenticationViewModel = DependencyContainer.shared.resolveAuthenticationViewModel()
-    @State private var showCharacterDetail = false
     @State private var selectedCharacter: CharacterBusinessModel?
     @EnvironmentObject var router: Router
 
@@ -44,10 +43,8 @@ struct FavoritesView: View {
                 await viewModel.loadFavorites()
             }
         }
-        .sheet(isPresented: $showCharacterDetail) {
-            if let character = selectedCharacter {
-                CharacterDetailView(character: character)
-            }
+        .sheet(item: $selectedCharacter) { character in
+            CharacterDetailView(character: character)
         }
     }
 
@@ -113,7 +110,6 @@ struct FavoritesView: View {
                         character: character,
                         onTap: {
                             selectedCharacter = character
-                            showCharacterDetail = true
                         },
                         onRemoveFavorite: {
                             viewModel.removeFromFavorites(characterId: character.id)
