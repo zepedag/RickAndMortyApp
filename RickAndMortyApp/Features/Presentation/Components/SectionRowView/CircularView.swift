@@ -10,15 +10,15 @@ import SwiftUI
 struct CircularView: View {
     var value: CGFloat = 0.5
     var lineWidth: Double = 4
+    var status: StatusBusinessModel?
 
     @State var appear = false
 
     var body: some View {
         Circle()
-            .trim(from: 0, to: appear ? value : 0)
+            .trim(from: 0, to: appear ? 1.0 : 0)
             .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-            .fill(.angularGradient(colors: [.purple, .orange, .purple],
-                                   center: .center, startAngle: .degrees(0), endAngle: .degrees(360)))
+            .fill(statusColor)
             .rotationEffect(.degrees(270))
             .onAppear {
                 withAnimation(.spring().delay(0.5)) {
@@ -28,5 +28,18 @@ struct CircularView: View {
             .onDisappear {
                 appear = false
             }
+    }
+
+    private var statusColor: Color {
+        switch status {
+        case .alive:
+            return .green
+        case .dead:
+            return .red
+        case .unknown:
+            return .orange
+        case .none:
+            return .gray
+        }
     }
 }

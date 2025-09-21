@@ -134,6 +134,7 @@ extension SectionRowModel {
         self.subtitle = businessModel.species
         self.text = "\(String(describing: businessModel.gender?.rawValue ?? "")) - \(businessModel.origin.name) - \(String(describing: businessModel.status?.rawValue ?? ""))"
         self.image = businessModel.image
-        self.progress = businessModel.status == .alive ? 1.0 : 0.1
+        self.progress = 1.0 // Always show full circle, color will indicate status
+        self.status = businessModel.status
     }
 }
