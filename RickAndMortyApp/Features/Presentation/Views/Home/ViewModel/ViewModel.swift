@@ -28,6 +28,12 @@ import Observation
 
     /// Boolean flag indicating whether a network request is in progress.
     var isLoading: Bool = false
+    
+    /// Flag to prevent multiple simultaneous API calls
+    private var isApiCallInProgress: Bool = false
+    
+    /// Flag to track if initial load has been completed
+    private var hasInitialLoadCompleted: Bool = false
 
     /// The current page for pagination.
     private var currentPage: Int = 1
@@ -54,11 +60,21 @@ import Observation
 
     /// Loads the character list from the network or cache.
     func loadCharacterList() async {
-        // Exit if already loading data
-        guard !isLoading else { return }
+        // Exit if already loading data or API call in progress
+        guard !isLoading && !isApiCallInProgress else { 
+            print("HomeViewModel: Skipping loadCharacterList - already in progress")
+            return 
+        }
+        
+        // If we already have characters and this is not a refresh, skip loading
+        if hasInitialLoadCompleted && !characterList.isEmpty {
+            print("HomeViewModel: Skipping loadCharacterList - data already loaded")
+            return
+        }
 
-        // Set loading flag
+        // Set loading flags
         isLoading = true
+        isApiCallInProgress = true
 
         do {
             // Fetch fresh data from the network
@@ -73,24 +89,37 @@ import Observation
                 hasError = false
                 currentPage += 1 // Increment current page for pagination
                 isLoading = false
+                isApiCallInProgress = false
+                hasInitialLoadCompleted = true
+                print("HomeViewModel: Successfully loaded page \(currentPage - 1)")
             }
         } catch {
             // Handle error and update the UI on the main thread.
             await MainActor.run {
                 isLoading = false
+                isApiCallInProgress = false
                 viewError = .unExpectedError
                 hasError = true
+                print("HomeViewModel: Error loading characters - \(error)")
             }
         }
     }
 
     /// Refreshes the character list by resetting pagination and loading fresh data
     func refreshCharacterList() async {
-        // Reset pagination
+        // Exit if already loading data or API call in progress
+        guard !isLoading && !isApiCallInProgress else { 
+            print("HomeViewModel: Skipping refreshCharacterList - already in progress")
+            return 
+        }
+        
+        // Reset pagination and flags
         currentPage = 1
+        hasInitialLoadCompleted = false
 
-        // Set loading flag
+        // Set loading flags
         isLoading = true
+        isApiCallInProgress = true
 
         // Network connectivity is automatically monitored
 
@@ -107,13 +136,15 @@ import Observation
                 hasError = false
                 currentPage += 1 // Increment current page for pagination
                 isLoading = false
+                isApiCallInProgress = false
 
-                print("✅ HomeViewModel: Successfully fetched data")
+                print("✅ HomeViewModel: Successfully refreshed data")
             }
         } catch {
             // Handle error and update the UI on the main thread.
             await MainActor.run {
                 isLoading = false
+                isApiCallInProgress = false
                 // Check if it's a network error
                 if let appError = error as? AppError, case AppError.networkUnavailable = appError {
                     viewError = .networkUnavailable
@@ -121,7 +152,15 @@ import Observation
                     viewError = .unExpectedError
                 }
                 hasError = true
+                print("HomeViewModel: Error refreshing characters - \(error)")
             }
+        }
+    }
+    
+    /// Forces initial load if no data is available
+    func ensureInitialLoad() async {
+        if characterList.isEmpty && !hasInitialLoadCompleted {
+            await loadCharacterList()
         }
     }
 }
