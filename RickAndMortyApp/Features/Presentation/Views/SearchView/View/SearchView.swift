@@ -12,7 +12,6 @@ import Combine
 struct SearchView: View {
     @Bindable var viewModel: SearchViewModel
     @State var text = ""
-    @State var showCharacterDetail = false
     @State var selectedCharacter: CharacterBusinessModel?
     @State var selectedStatus: StatusBusinessModel?
     @State var selectedSpecies: String?
@@ -59,10 +58,12 @@ struct SearchView: View {
 
 extension SearchView {
     private func searchCharacter(by text: String) {
+        print("🔍 SearchView: searchCharacter called with text: '\(text)'")
         viewModel.workItem?.cancel()
         let task = DispatchWorkItem { [weak viewModel] in
             guard let viewModel else { return }
             Task {
+                print("🔍 SearchView: Executing search task for '\(text)'")
                 await viewModel.searchCharacter(by: text, isFirstLoad: true)
             }
         }

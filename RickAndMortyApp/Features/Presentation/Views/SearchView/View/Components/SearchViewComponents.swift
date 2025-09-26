@@ -15,7 +15,7 @@ extension SearchView {
                 }
 
                 Button {
-                    showCharacterDetail = true
+                    print("SearchView: Selected character: \(character.name)")
                     selectedCharacter = character
                 } label: {
                     ListRow(title: character.name, image: character.image)
@@ -32,8 +32,8 @@ extension SearchView {
         .refreshable {
             await viewModel.searchCharacter(by: text, isFirstLoad: true)
         }
-        .sheet(isPresented: $showCharacterDetail) {
-            CharacterDetailView(character: selectedCharacter)
+        .sheet(item: $selectedCharacter) { character in
+            CharacterDetailView(character: character)
         }
     }
 
