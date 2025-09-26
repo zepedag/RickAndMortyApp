@@ -41,7 +41,7 @@ struct HomeView: View {
         .statusBar(hidden: !showStatusBar)
         .onAppear {
             Task {
-                await viewModel.loadCharacterList()
+                await viewModel.ensureInitialLoad()
             }
         }
         .alert(isPresented: $viewModel.hasError) {
