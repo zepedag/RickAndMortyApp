@@ -24,6 +24,19 @@ import Observation
     private let requiredConsecutiveCount = 2  // Requiere 2 confirmaciones antes de cambiar (más rápido)
 
     var isConnected: Bool = false  // Empezar como desconectado hasta confirmar
+    
+    // MARK: - Demo Mode (Para entrevistas)
+    var demoMode: Bool = false {
+        didSet {
+            if demoMode {
+                isConnected = false
+                print(" DEMO MODE: Simulando modo sin conexión")
+            } else {
+                print(" DEMO MODE: Desactivado, verificando conexión real")
+                performInitialConnectivityCheck()
+            }
+        }
+    }
     var connectionType: ConnectionType = .wifi  // Asumir Wi-Fi por defecto
 
     enum ConnectionType {
@@ -51,12 +64,12 @@ import Observation
         let initialPath = monitor.currentPath
         connectionType = getConnectionType(from: initialPath)
 
-        print("🌐 NetworkMonitor: Initial connection type: \(connectionTypeDescription)")
+        print(" NetworkMonitor: Initial connection type: \(connectionTypeDescription)")
 
         // Hacer un chequeo real inmediato para determinar el estado de conexión
         guard let url = URL(string: "https://www.google.com/generate_204") else {
             isConnected = false
-            print("❌ NetworkMonitor: Initial check failed - invalid URL")
+            print(" NetworkMonitor: Initial check failed - invalid URL")
             return
         }
 
@@ -78,11 +91,11 @@ import Observation
                 if isActuallyConnected {
                     self.consecutiveSuccesses = self.requiredConsecutiveCount  // Ya confirmado
                     self.consecutiveFailures = 0
-                    print("✅ NetworkMonitor: Initial state - CONNECTED")
+                    print("NetworkMonitor: Initial state - CONNECTED")
                 } else {
                     self.consecutiveFailures = self.requiredConsecutiveCount  // Ya confirmado
                     self.consecutiveSuccesses = 0
-                    print("❌ NetworkMonitor: Initial state - DISCONNECTED")
+                    print("NetworkMonitor: Initial state - DISCONNECTED")
                 }
 
                 print("🔍 NetworkMonitor: Initial Status - Connected=\(self.isConnected), Type=\(self.connectionTypeDescription)")
@@ -100,7 +113,7 @@ import Observation
                 let newConnectionType = self.getConnectionType(from: path)
                 if self.connectionType != newConnectionType {
                     self.connectionType = newConnectionType
-                    print("🌐 NWPathMonitor: Connection type updated to: \(self.connectionTypeDescription)")
+                    print(" NWPathMonitor: Connection type updated to: \(self.connectionTypeDescription)")
                 }
             }
         }
@@ -176,6 +189,9 @@ import Observation
 
     /// Realiza un chequeo de conectividad que requiere múltiples confirmaciones
     private func performStableConnectivityCheck() {
+        // Si estamos en modo demo, no hacer verificaciones reales
+        guard !demoMode else { return }
+        
         // Solo hacer check si no estamos ya verificando
         guard !isCurrentlyChecking else { return }
 
@@ -188,7 +204,7 @@ import Observation
         }
 
         let config = URLSessionConfiguration.default
-        config.timeoutIntervalForRequest = 2.0  // Timeout agresivo para detección rápida
+        config.timeoutIntervalForRequest = 2.0  // Timeout 
         config.timeoutIntervalForResource = 2.0
         config.waitsForConnectivity = false
         config.allowsCellularAccess = true
@@ -200,7 +216,7 @@ import Observation
 
                 let isActuallyConnected = error == nil && (response as? HTTPURLResponse)?.statusCode == 204
 
-                print("🔍 Stable Check: Google 204 test - Success: \(isActuallyConnected)")
+                print("Stable Check: Google 204 test - Success: \(isActuallyConnected)")
 
                 self.updateConnectionState(isConnected: isActuallyConnected)
                 self.isCurrentlyChecking = false
@@ -218,12 +234,12 @@ import Observation
             // Solo cambiar a conectado después de X confirmaciones consecutivas
             if consecutiveSuccesses >= requiredConsecutiveCount && !self.isConnected {
                 self.isConnected = true
-                print("✅ FAST: CONNECTION RESTORED after \(consecutiveSuccesses) confirmations")
+                print("FAST: CONNECTION RESTORED after \(consecutiveSuccesses) confirmations")
 
                 // Asegurar que tenemos un tipo de conexión válido cuando se restaura
                 if connectionType == .unknown {
                     connectionType = .wifi
-                    print("🔧 NetworkMonitor: Set connection type to Wi-Fi (was unknown)")
+                    print("NetworkMonitor: Set connection type to Wi-Fi (was unknown)")
                 }
             }
         } else {
@@ -233,11 +249,10 @@ import Observation
             // Solo cambiar a desconectado después de X confirmaciones consecutivas
             if consecutiveFailures >= requiredConsecutiveCount && self.isConnected {
                 self.isConnected = false
-                print("❌ FAST: CONNECTION LOST after \(consecutiveFailures) confirmations")
+                print("FAST: CONNECTION LOST after \(consecutiveFailures) confirmations")
 
                 // Al perder conexión, mantener el último tipo conocido (no cambiar a unknown)
-                // Esto evita que aparezca "?" cuando se pierde la conexión
-                print("🔧 NetworkMonitor: Keeping connection type as \(connectionTypeDescription) while disconnected")
+                print("NetworkMonitor: Keeping connection type as \(connectionTypeDescription) while disconnected")
             }
         }
 
@@ -248,5 +263,10 @@ import Observation
     func forceConnectivityCheck() {
         print("🔍 NetworkMonitor: Forcing immediate connectivity check...")
         performStableConnectivityCheck()
+    }
+    
+    /// Para demostracion
+    func toggleDemoMode() {
+        demoMode.toggle()
     }
 }

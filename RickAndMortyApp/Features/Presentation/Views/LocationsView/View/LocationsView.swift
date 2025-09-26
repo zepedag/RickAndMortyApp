@@ -8,6 +8,17 @@
 import SwiftUI
 import MapKit
 
+struct LocationCharacterAnnotation: Equatable, Identifiable {
+    let coordinate: CLLocationCoordinate2D
+    let character: CharacterBusinessModel
+    
+    var id: Int { character.id }
+    
+    static func == (lhs: LocationCharacterAnnotation, rhs: LocationCharacterAnnotation) -> Bool {
+        return lhs.character.id == rhs.character.id
+    }
+}
+
 struct LocationsView: View {
     @EnvironmentObject var router: Router
     @State private var region = MKCoordinateRegion(
@@ -15,6 +26,7 @@ struct LocationsView: View {
         span: MKCoordinateSpan(latitudeDelta: 80.0, longitudeDelta: 80.0)
     )
     @State private var selectedCharacter: CharacterBusinessModel?
+    @State private var loadedImages: [Int: UIImage] = [:]
 
     private let sampleCharacters: [CharacterBusinessModel] = [
         CharacterBusinessModel(
@@ -89,9 +101,9 @@ struct LocationsView: View {
         )
     ]
 
-    private var characterAnnotations: [CharacterAnnotation] {
+    private var characterAnnotations: [LocationCharacterAnnotation] {
         sampleCharacters.map { character in
-            CharacterAnnotation(
+            LocationCharacterAnnotation(
                 coordinate: getSimulatedLocation(for: character.location.name),
                 character: character
             )
@@ -103,28 +115,17 @@ struct LocationsView: View {
             ZStack {
                 Map(coordinateRegion: $region, annotationItems: characterAnnotations) { annotation in
                     MapAnnotation(coordinate: annotation.coordinate) {
-                        Button(action: {
-                            selectedCharacter = annotation.character
-                        }) {
-                            VStack {
-                                AsyncImage(url: URL(string: annotation.character.image)) { image in
-                                    image.resizable().aspectRatio(contentMode: .fill)
-                                } placeholder: {
-                                    Image("noImageAvailable").resizable().aspectRatio(contentMode: .fill)
-                                }
-                                .frame(width: 40, height: 40)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(statusColor(for: annotation.character.status), lineWidth: 3))
-                                .shadow(radius: 3)
-
-                                Text(annotation.character.name)
-                                    .font(.caption2).fontWeight(.semibold)
-                                    .padding(.horizontal, 6).padding(.vertical, 2)
-                                    .background(.ultraThinMaterial).cornerRadius(6).lineLimit(1)
+                        CharacterMapAnnotation(
+                            character: annotation.character,
+                            loadedImages: $loadedImages,
+                            onTap: {
+                                selectedCharacter = annotation.character
                             }
-                        }.buttonStyle(.plain)
+                        )
+                        .id(annotation.character.id) // Stable ID to prevent recreation
                     }
-                }.ignoresSafeArea()
+                }
+                .ignoresSafeArea()
 
                 VStack {
                     Spacer()
@@ -205,6 +206,85 @@ struct LocationsView: View {
         case "giant's town": return CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6176)
         case "post-apocalyptic earth": return CLLocationCoordinate2D(latitude: 39.9042, longitude: 116.4074)
         default: return CLLocationCoordinate2D(latitude: Double.random(in: -90...90), longitude: Double.random(in: -180...180))
+        }
+    }
+}
+
+// MARK: - Character Map Annotation
+
+struct CharacterMapAnnotation: View {
+    let character: CharacterBusinessModel
+    @Binding var loadedImages: [Int: UIImage]
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            VStack {
+                characterImageView
+                
+                Text(character.name)
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(6)
+                    .lineLimit(1)
+            }
+        }
+        .buttonStyle(.plain)
+        .onAppear {
+            loadImageIfNeeded()
+        }
+    }
+    
+    @ViewBuilder
+    private var characterImageView: some View {
+        if let image = loadedImages[character.id] {
+            // Use cached image - always stable
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 40, height: 40)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(statusColor(for: character.status), lineWidth: 3))
+                .shadow(radius: 3)
+        } else {
+            // Show placeholder while loading
+            Image("noImageAvailable")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 40, height: 40)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(statusColor(for: character.status), lineWidth: 3))
+                .shadow(radius: 3)
+        }
+    }
+    
+    private func loadImageIfNeeded() {
+        guard loadedImages[character.id] == nil else { return }
+        
+        Task {
+            do {
+                let url = URL(string: character.image)!
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if let uiImage = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        loadedImages[character.id] = uiImage
+                    }
+                }
+            } catch {
+                print("Failed to load image for character \(character.id): \(error)")
+            }
+        }
+    }
+
+    private func statusColor(for status: StatusBusinessModel?) -> Color {
+        switch status {
+        case .alive: return .green
+        case .dead: return .red
+        case .unknown: return .orange
+        case .none: return .gray
         }
     }
 }
